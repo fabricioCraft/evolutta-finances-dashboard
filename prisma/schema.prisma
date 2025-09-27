@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model CategorizationRule {
+  id         String   @id @default(cuid())
+  keyword    String   @unique
+  categoryId String
+  rule_type  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
