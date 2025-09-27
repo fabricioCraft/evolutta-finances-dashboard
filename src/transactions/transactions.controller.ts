@@ -1,5 +1,6 @@
-import { Controller, Patch, Param, Body } from '@nestjs/common';
+import { Controller, Patch, Param, Body, NotFoundException } from '@nestjs/common';
 import { CategorizationService } from '../transaction-processing/categorization/categorization.service';
+import { TransactionsService } from './transactions.service';
 
 // DTO para validação dos dados de entrada
 export class UpdateCategoryDto {
@@ -8,28 +9,30 @@ export class UpdateCategoryDto {
 
 @Controller('transactions')
 export class TransactionsController {
-  constructor(private readonly categorizationService: CategorizationService) {}
+  constructor(
+    private readonly categorizationService: CategorizationService,
+    private readonly transactionsService: TransactionsService,
+  ) {}
 
   @Patch(':id/categorize')
   async recategorizeTransaction(
     @Param('id') transactionId: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    // TODO: Na implementação final, buscar a transação real do banco de dados usando o transactionId
-    // const transaction = await this.transactionService.findById(transactionId);
+    // Buscar a transação real do banco de dados
+    const transaction = await this.transactionsService.findById(transactionId);
     
-    // Por enquanto, usando um objeto mockado para demonstração
-    const mockTransaction = {
-      id: transactionId,
-      description: 'Compra no supermercado XYZ',
-      amount: -150.00,
-      date: new Date(),
-      categoryId: 'uncategorized'
-    };
+    // Verificar se a transação existe
+    if (!transaction) {
+      throw new NotFoundException(`Transaction with ID ${transactionId} not found`);
+    }
+
+    // Atualizar a categoria da transação no banco de dados
+    await this.transactionsService.updateCategory(transactionId, updateCategoryDto.categoryId);
 
     // Chama o serviço de categorização para aprender com a categorização manual
     await this.categorizationService.learnFromManualCategorization(
-      mockTransaction,
+      transaction,
       updateCategoryDto.categoryId,
     );
 
