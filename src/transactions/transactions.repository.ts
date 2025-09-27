@@ -28,4 +28,24 @@ export class PrismaTransactionsRepository {
       data: { categoryId }
     });
   }
+
+  /**
+   * Busca todas as transações dentro de um intervalo de datas
+   * @param startDate - Data inicial (inclusive)
+   * @param endDate - Data final (inclusive)
+   * @returns Array de transações encontradas no período
+   */
+  async findAllByDateRange(startDate: Date, endDate: Date) {
+    return this.prisma.transaction.findMany({
+      where: {
+        date: {
+          gte: startDate, // maior ou igual a startDate
+          lte: endDate,   // menor ou igual a endDate
+        }
+      },
+      orderBy: {
+        date: 'desc' // ordenar por data decrescente
+      }
+    });
+  }
 }

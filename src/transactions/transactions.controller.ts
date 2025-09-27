@@ -1,4 +1,4 @@
-import { Controller, Patch, Param, Body, NotFoundException } from '@nestjs/common';
+import { Controller, Patch, Param, Body, NotFoundException, Get, Query } from '@nestjs/common';
 import { CategorizationService } from '../transaction-processing/categorization/categorization.service';
 import { TransactionsService } from './transactions.service';
 
@@ -41,5 +41,18 @@ export class TransactionsController {
       transactionId,
       newCategoryId: updateCategoryDto.categoryId,
     };
+  }
+
+  @Get()
+  async findAll(
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+  ) {
+    // Converter strings de data para objetos Date
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
+
+    // Chamar o serviço com as datas convertidas
+    return await this.transactionsService.findAllByDateRange(startDateObj, endDateObj);
   }
 }

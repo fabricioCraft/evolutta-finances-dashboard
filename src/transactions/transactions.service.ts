@@ -14,4 +14,8 @@ export class TransactionsService {
   async updateCategory(id: string, categoryId: string) {
     return this.transactionsRepository.updateCategory(id, categoryId);
   }
+
+  async findAllByDateRange(startDate: Date, endDate: Date) {
+    return this.transactionsRepository.findAllByDateRange(startDate, endDate);
+  }
 }
