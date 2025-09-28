@@ -5,6 +5,9 @@ import { ICategoriesRepository } from './categories.repository';
 // Mock do repositório que será criado futuramente
 const mockCategoriesRepository = {
   create: jest.fn(),
+  findAll: jest.fn(),
+  update: jest.fn(),
+  remove: jest.fn(),
 } as jest.Mocked<ICategoriesRepository>;
 
 describe('CategoriesService', () => {
@@ -59,5 +62,88 @@ describe('CategoriesService', () => {
 
     // b. Verificar se o resultado é o mockCreatedCategory
     expect(result).toEqual(mockCreatedCategory);
+  });
+
+  describe('findAll', () => {
+    it('should return an array of categories', async () => {
+      // Arrange
+      const mockCategories = [
+        {
+          id: '1',
+          name: 'Alimentação',
+          createdAt: new Date('2024-01-01'),
+          updatedAt: new Date('2024-01-01'),
+        },
+        {
+          id: '2',
+          name: 'Transporte',
+          createdAt: new Date('2024-01-02'),
+          updatedAt: new Date('2024-01-02'),
+        },
+        {
+          id: '3',
+          name: 'Lazer',
+          createdAt: new Date('2024-01-03'),
+          updatedAt: new Date('2024-01-03'),
+        },
+      ];
+
+      categoriesRepository.findAll.mockResolvedValue(mockCategories);
+
+      // Act
+      const result = await service.findAll();
+
+      // Assert
+      expect(categoriesRepository.findAll).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(mockCategories);
+    });
+  });
+
+  describe('update', () => {
+    it('should call the repository with an id and data, and return the updated category', async () => {
+      // Arrange
+      const categoryId = '1';
+      const updateCategoryDto = { name: 'Despesas de Marketing' };
+      
+      const mockUpdatedCategory = {
+        id: '1',
+        name: 'Despesas de Marketing',
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-15'),
+      };
+
+      categoriesRepository.update.mockResolvedValue(mockUpdatedCategory);
+
+      // Act
+      const result = await service.update(categoryId, updateCategoryDto);
+
+      // Assert
+      expect(categoriesRepository.update).toHaveBeenCalledWith(categoryId, updateCategoryDto);
+      expect(categoriesRepository.update).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(mockUpdatedCategory);
+    });
+  });
+
+  describe('remove', () => {
+    it('should call the repository with the correct id to remove a category', async () => {
+      // Arrange
+      const categoryId = '1';
+      const mockDeletedCategory = {
+        id: categoryId,
+        name: 'Categoria Deletada',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      categoriesRepository.remove.mockResolvedValue(mockDeletedCategory);
+
+      // Act
+      const result = await service.remove(categoryId);
+
+      // Assert
+      expect(categoriesRepository.remove).toHaveBeenCalledWith(categoryId);
+      expect(categoriesRepository.remove).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(mockDeletedCategory);
+    });
   });
 });

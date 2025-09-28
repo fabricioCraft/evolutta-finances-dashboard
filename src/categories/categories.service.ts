@@ -5,6 +5,10 @@ export interface CreateCategoryDto {
   name: string;
 }
 
+export interface UpdateCategoryDto {
+  name: string;
+}
+
 @Injectable()
 export class CategoriesService {
   constructor(
@@ -14,5 +18,17 @@ export class CategoriesService {
 
   async create(createCategoryDto: CreateCategoryDto) {
     return this.categoriesRepository.create(createCategoryDto);
+  }
+
+  async findAll() {
+    return this.categoriesRepository.findAll();
+  }
+
+  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+    return this.categoriesRepository.update(id, updateCategoryDto);
+  }
+
+  async remove(id: string) {
+    return this.categoriesRepository.remove(id);
   }
 }
