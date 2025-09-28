@@ -87,8 +87,9 @@ describe('TransactionsService', () => {
   });
 
   describe('findAllByDateRange', () => {
-    it('should call the repository with the correct date range and return its result', async () => {
-      // Definir startDate e endDate de exemplo
+    it('should call the repository with the correct userId and date range and return its result', async () => {
+      // Adicionar userId de exemplo ao teste
+      const userId = 'test-user-123';
       const startDate = new Date('2024-01-01');
       const endDate = new Date('2024-01-31');
 
@@ -120,11 +121,11 @@ describe('TransactionsService', () => {
       // Configurar o mock do PrismaTransactionsRepository para retornar o array mockado
       repository.findAllByDateRange.mockResolvedValue(mockTransactions);
 
-      // Chamar o método findAllByDateRange no TransactionsService
-      const result = await service.findAllByDateRange(startDate, endDate);
+      // Chamar o método findAllByDateRange no TransactionsService com userId
+      const result = await service.findAllByDateRange(userId, startDate, endDate);
 
-      // Verificar que o método findAllByDateRange do repositório foi chamado com as datas exatas
-      expect(repository.findAllByDateRange).toHaveBeenCalledWith(startDate, endDate);
+      // Verificar que o método findAllByDateRange do repositório foi chamado com userId e as datas exatas
+      expect(repository.findAllByDateRange).toHaveBeenCalledWith(userId, startDate, endDate);
       expect(repository.findAllByDateRange).toHaveBeenCalledTimes(1);
 
       // Verificar que o resultado retornado pelo serviço é o mesmo array mockado
@@ -132,18 +133,20 @@ describe('TransactionsService', () => {
     });
 
     it('should return empty array when no transactions found in date range', async () => {
+      const userId = 'test-user-456';
       const startDate = new Date('2024-02-01');
       const endDate = new Date('2024-02-28');
 
       repository.findAllByDateRange.mockResolvedValue([]);
 
-      const result = await service.findAllByDateRange(startDate, endDate);
+      const result = await service.findAllByDateRange(userId, startDate, endDate);
 
-      expect(repository.findAllByDateRange).toHaveBeenCalledWith(startDate, endDate);
+      expect(repository.findAllByDateRange).toHaveBeenCalledWith(userId, startDate, endDate);
       expect(result).toEqual([]);
     });
 
     it('should handle same start and end date (single day)', async () => {
+      const userId = 'test-user-789';
       const singleDate = new Date('2024-01-15');
       const mockTransactions = [
         {
@@ -157,13 +160,14 @@ describe('TransactionsService', () => {
 
       repository.findAllByDateRange.mockResolvedValue(mockTransactions);
 
-      const result = await service.findAllByDateRange(singleDate, singleDate);
+      const result = await service.findAllByDateRange(userId, singleDate, singleDate);
 
-      expect(repository.findAllByDateRange).toHaveBeenCalledWith(singleDate, singleDate);
+      expect(repository.findAllByDateRange).toHaveBeenCalledWith(userId, singleDate, singleDate);
       expect(result).toEqual(mockTransactions);
     });
 
     it('should handle different date ranges correctly', async () => {
+      const userId = 'test-user-abc';
       const startDate = new Date('2023-12-01');
       const endDate = new Date('2024-03-31');
       const mockTransactions = [
@@ -185,9 +189,9 @@ describe('TransactionsService', () => {
 
       repository.findAllByDateRange.mockResolvedValue(mockTransactions);
 
-      const result = await service.findAllByDateRange(startDate, endDate);
+      const result = await service.findAllByDateRange(userId, startDate, endDate);
 
-      expect(repository.findAllByDateRange).toHaveBeenCalledWith(startDate, endDate);
+      expect(repository.findAllByDateRange).toHaveBeenCalledWith(userId, startDate, endDate);
       expect(result).toEqual(mockTransactions);
     });
   });

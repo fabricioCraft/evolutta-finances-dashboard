@@ -8,11 +8,27 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model User {
+  id           String        @id // Corresponde ao ID do Supabase Auth
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  
+  // Relações
+  transactions Transaction[]
+  categories   Category[]
+}
+
 model Category {
   id        String   @id @default(cuid())
-  name      String   @unique
+  name      String
+  userId    String   // Chave estrangeira para o usuário proprietário
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  // Relação com o usuário
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([name, userId]) // Nome único por usuário
 }
 
 model CategorizationRule {
@@ -29,7 +45,11 @@ model Transaction {
   description String
   amount      Float
   categoryId  String
+  userId      String   // Chave estrangeira para o usuário proprietário
   date        DateTime @default(now())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
+  // Relação com o usuário
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

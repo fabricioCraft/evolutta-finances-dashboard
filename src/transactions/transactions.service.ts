@@ -15,7 +15,7 @@ export class TransactionsService {
     return this.transactionsRepository.updateCategory(id, categoryId);
   }
 
-  async findAllByDateRange(startDate: Date, endDate: Date) {
-    return this.transactionsRepository.findAllByDateRange(startDate, endDate);
+  async findAllByDateRange(userId: string, startDate: Date, endDate: Date) {
+    return this.transactionsRepository.findAllByDateRange(userId, startDate, endDate);
   }
 }

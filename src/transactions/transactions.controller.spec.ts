@@ -91,8 +91,9 @@ describe('TransactionsController', () => {
     // Chamar o método controller.findAll(startDateString, endDateString, mockUser)
     const result = await controller.findAll(startDateString, endDateString, mockUser as any);
 
-    // Verificar que o método findAllByDateRange do serviço foi chamado com objetos Date reais
+    // Verificar que o método findAllByDateRange do serviço foi chamado com userId e objetos Date reais
     expect(service.findAllByDateRange).toHaveBeenCalledWith(
+      mockUser.id,
       new Date(startDateString),
       new Date(endDateString)
     );

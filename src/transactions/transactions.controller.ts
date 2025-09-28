@@ -60,7 +60,7 @@ export class TransactionsController {
     const startDateObj = new Date(startDate);
     const endDateObj = new Date(endDate);
 
-    // Chamar o serviço com as datas convertidas
-    return await this.transactionsService.findAllByDateRange(startDateObj, endDateObj);
+    // Chamar o serviço com o userId e as datas convertidas
+    return await this.transactionsService.findAllByDateRange(user.id, startDateObj, endDateObj);
   }
 }

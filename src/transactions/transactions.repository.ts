@@ -1,8 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 
+export interface ITransactionsRepository {
+  findById(id: string): Promise<any>;
+  updateCategory(id: string, categoryId: string): Promise<any>;
+  findAllByDateRange(userId: string, startDate: Date, endDate: Date): Promise<any[]>;
+}
+
 @Injectable()
-export class PrismaTransactionsRepository {
+export class PrismaTransactionsRepository implements ITransactionsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
@@ -30,14 +36,16 @@ export class PrismaTransactionsRepository {
   }
 
   /**
-   * Busca todas as transações dentro de um intervalo de datas
+   * Busca todas as transações de um usuário dentro de um intervalo de datas
+   * @param userId - ID do usuário
    * @param startDate - Data inicial (inclusive)
    * @param endDate - Data final (inclusive)
-   * @returns Array de transações encontradas no período
+   * @returns Array de transações encontradas no período para o usuário
    */
-  async findAllByDateRange(startDate: Date, endDate: Date) {
+  async findAllByDateRange(userId: string, startDate: Date, endDate: Date) {
     return this.prisma.transaction.findMany({
       where: {
+        userId: userId, // filtrar por usuário
         date: {
           gte: startDate, // maior ou igual a startDate
           lte: endDate,   // menor ou igual a endDate
