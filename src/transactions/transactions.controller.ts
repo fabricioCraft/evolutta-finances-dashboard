@@ -1,6 +1,9 @@
-import { Controller, Patch, Param, Body, NotFoundException, Get, Query } from '@nestjs/common';
+import { Controller, Patch, Param, Body, NotFoundException, Get, Query, UseGuards } from '@nestjs/common';
+import { User } from '@supabase/supabase-js';
 import { CategorizationService } from '../transaction-processing/categorization/categorization.service';
 import { TransactionsService } from './transactions.service';
+import { AuthGuard } from '../auth/auth.guard';
+import { GetUser } from '../auth/get-user.decorator';
 
 // DTO para validação dos dados de entrada
 export class UpdateCategoryDto {
@@ -8,6 +11,7 @@ export class UpdateCategoryDto {
 }
 
 @Controller('transactions')
+@UseGuards(AuthGuard)
 export class TransactionsController {
   constructor(
     private readonly categorizationService: CategorizationService,
@@ -47,7 +51,11 @@ export class TransactionsController {
   async findAll(
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
+    @GetUser() user: User,
   ) {
+    // Imprimir o ID do usuário no console para confirmar que funciona
+    console.log('User ID:', user.id);
+    
     // Converter strings de data para objetos Date
     const startDateObj = new Date(startDate);
     const endDateObj = new Date(endDate);

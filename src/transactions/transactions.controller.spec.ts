@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TransactionsController } from './transactions.controller';
 import { TransactionsService } from './transactions.service';
 import { CategorizationService } from '../transaction-processing/categorization/categorization.service';
+import { AuthGuard } from '../auth/auth.guard';
+import { SUPABASE_CLIENT } from '../supabase/supabase.provider';
 
 describe('TransactionsController', () => {
   let controller: TransactionsController;
@@ -20,6 +22,13 @@ describe('TransactionsController', () => {
       learnFromManualCategorization: jest.fn(),
     };
 
+    // Criar mock do SupabaseClient
+    const mockSupabaseClient = {
+      auth: {
+        getUser: jest.fn(),
+      },
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TransactionsController],
       providers: [
@@ -31,6 +40,11 @@ describe('TransactionsController', () => {
           provide: CategorizationService,
           useValue: mockCategorizationService,
         },
+        {
+          provide: SUPABASE_CLIENT,
+          useValue: mockSupabaseClient,
+        },
+        AuthGuard,
       ],
     }).compile();
 
@@ -68,8 +82,14 @@ describe('TransactionsController', () => {
     // Configurar o mock do transactionsService.findAllByDateRange para retornar o mockResult
     service.findAllByDateRange.mockResolvedValue(mockResult);
 
-    // Chamar o método controller.findAll(startDateString, endDateString) (que ainda não existe)
-    const result = await controller.findAll(startDateString, endDateString);
+    // Criar mock do usuário
+    const mockUser = {
+      id: 'test-user-id',
+      email: 'test@example.com',
+    };
+
+    // Chamar o método controller.findAll(startDateString, endDateString, mockUser)
+    const result = await controller.findAll(startDateString, endDateString, mockUser as any);
 
     // Verificar que o método findAllByDateRange do serviço foi chamado com objetos Date reais
     expect(service.findAllByDateRange).toHaveBeenCalledWith(
