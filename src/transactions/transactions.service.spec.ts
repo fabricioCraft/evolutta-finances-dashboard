@@ -38,9 +38,13 @@ describe('TransactionsService', () => {
       const mockTransaction = {
         id: transactionId,
         description: 'Test transaction',
+        cleanedDescription: 'test transaction',
         amount: -100.00,
         date: new Date('2024-01-15'),
         categoryId: 'test-category',
+        userId: 'test-user-123',
+        createdAt: new Date('2024-01-15'),
+        updatedAt: new Date('2024-01-15'),
       };
 
       repository.findById.mockResolvedValue(mockTransaction);
@@ -71,9 +75,13 @@ describe('TransactionsService', () => {
       const updatedTransaction = {
         id: transactionId,
         description: 'Test transaction',
+        cleanedDescription: 'test transaction',
         amount: -100.00,
         date: new Date('2024-01-15'),
         categoryId: categoryId,
+        userId: 'test-user-123',
+        createdAt: new Date('2024-01-15'),
+        updatedAt: new Date('2024-01-15'),
       };
 
       repository.updateCategory.mockResolvedValue(updatedTransaction);
@@ -98,23 +106,35 @@ describe('TransactionsService', () => {
         {
           id: '1',
           description: 'Compra no supermercado',
+          cleanedDescription: 'compra no supermercado',
           amount: -150.00,
           date: new Date('2024-01-15'),
           categoryId: 'groceries',
+          userId: 'test-user-123',
+          createdAt: new Date('2024-01-15'),
+          updatedAt: new Date('2024-01-15'),
         },
         {
           id: '2',
           description: 'Salário',
+          cleanedDescription: 'salario',
           amount: 3000.00,
           date: new Date('2024-01-01'),
           categoryId: 'salary',
+          userId: 'test-user-123',
+          createdAt: new Date('2024-01-01'),
+          updatedAt: new Date('2024-01-01'),
         },
         {
           id: '3',
           description: 'Conta de luz',
+          cleanedDescription: 'conta de luz',
           amount: -80.50,
           date: new Date('2024-01-20'),
           categoryId: 'utilities',
+          userId: 'test-user-123',
+          createdAt: new Date('2024-01-20'),
+          updatedAt: new Date('2024-01-20'),
         },
       ];
 
@@ -152,9 +172,13 @@ describe('TransactionsService', () => {
         {
           id: '1',
           description: 'Single day transaction',
+          cleanedDescription: 'single day transaction',
           amount: -50.00,
           date: new Date('2024-01-15'),
           categoryId: 'test',
+          userId: 'test-user-789',
+          createdAt: new Date('2024-01-15'),
+          updatedAt: new Date('2024-01-15'),
         },
       ];
 
@@ -174,16 +198,24 @@ describe('TransactionsService', () => {
         {
           id: '1',
           description: 'Q4 transaction',
+          cleanedDescription: 'q4 transaction',
           amount: -200.00,
           date: new Date('2023-12-15'),
           categoryId: 'q4',
+          userId: 'test-user-abc',
+          createdAt: new Date('2023-12-15'),
+          updatedAt: new Date('2023-12-15'),
         },
         {
           id: '2',
           description: 'Q1 transaction',
+          cleanedDescription: 'q1 transaction',
           amount: 1000.00,
           date: new Date('2024-01-15'),
           categoryId: 'q1',
+          userId: 'test-user-abc',
+          createdAt: new Date('2024-01-15'),
+          updatedAt: new Date('2024-01-15'),
         },
       ];
 

@@ -2,18 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 
 export interface IReportsRepository {
-  getSummaryByDateRange(startDate: Date, endDate: Date): Promise<any>;
+  getSummaryByDateRange(startDate: Date, endDate: Date, userId: string): Promise<any>;
 }
 
 @Injectable()
 export class PrismaReportsRepository implements IReportsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getSummaryByDateRange(startDate: Date, endDate: Date): Promise<any> {
+  async getSummaryByDateRange(startDate: Date, endDate: Date, userId: string): Promise<any> {
     // Usar groupBy do Prisma na tabela Transaction
     const groupedTransactions = await this.prisma.transaction.groupBy({
       by: ['categoryId'],
       where: {
+        userId: userId,
         date: {
           gte: startDate,
           lte: endDate,

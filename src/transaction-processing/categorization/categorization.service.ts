@@ -1,9 +1,13 @@
 import { Injectable, Inject } from '@nestjs/common';
 
 export interface CategorizationRule {
+  id: string;
   keyword: string;
   categoryId: string;
   rule_type: string;
+  createdAt: Date;
+  updatedAt: Date;
+  normalizedDescription: string | null;
 }
 
 export interface Transaction {
@@ -14,7 +18,7 @@ export interface Transaction {
 
 export interface RulesRepository {
   findByKeyword(keyword: string): Promise<CategorizationRule | null>;
-  create(ruleData: Omit<CategorizationRule, 'id'>): Promise<CategorizationRule>;
+  create(ruleData: Omit<CategorizationRule, 'id' | 'createdAt' | 'updatedAt'>): Promise<CategorizationRule>;
 }
 
 @Injectable()
@@ -80,7 +84,8 @@ export class CategorizationService {
       await this.rulesRepository.create({
         keyword: keyword,
         categoryId: newCategoryId,
-        rule_type: 'CONTAINS'
+        rule_type: 'CONTAINS',
+        normalizedDescription: null
       });
     }
   }

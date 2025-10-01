@@ -5,6 +5,13 @@ import { CategorizationService } from '../transaction-processing/categorization/
 import { AuthGuard } from '../auth/auth.guard';
 import { SUPABASE_CLIENT } from '../supabase/supabase.provider';
 
+// Tipo personalizado para User (compatível com Supabase Auth)
+interface User {
+  id: string;
+  email?: string;
+  [key: string]: any;
+}
+
 describe('TransactionsController', () => {
   let controller: TransactionsController;
   let service: jest.Mocked<TransactionsService>;
@@ -66,16 +73,24 @@ describe('TransactionsController', () => {
       {
         id: '1',
         description: 'Compra no supermercado',
-        amount: -150.00,
+        cleanedDescription: 'compra no supermercado',
+        amount: -150.50,
         date: new Date('2024-01-15'),
         categoryId: 'groceries',
+        userId: 'test-user-id',
+        createdAt: new Date('2024-01-15'),
+        updatedAt: new Date('2024-01-15'),
       },
       {
         id: '2',
         description: 'Salário',
+        cleanedDescription: 'salario',
         amount: 3000.00,
         date: new Date('2024-01-01'),
         categoryId: 'salary',
+        userId: 'test-user-id',
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-01'),
       },
     ];
 
@@ -86,10 +101,10 @@ describe('TransactionsController', () => {
     const mockUser = {
       id: 'test-user-id',
       email: 'test@example.com',
-    };
+    } as User;
 
     // Chamar o método controller.findAll(startDateString, endDateString, mockUser)
-    const result = await controller.findAll(startDateString, endDateString, mockUser as any);
+    const result = await controller.findAll(startDateString, endDateString, mockUser);
 
     // Verificar que o método findAllByDateRange do serviço foi chamado com userId e objetos Date reais
     expect(service.findAllByDateRange).toHaveBeenCalledWith(

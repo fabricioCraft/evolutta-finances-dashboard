@@ -128,7 +128,7 @@ describe('AuthGuard', () => {
     });
 
     // Simular um objeto de requisição com cabeçalho authorization válido
-    const mockRequest = {
+    const mockRequest: any = {
       headers: {
         authorization: 'Bearer valid_token_123',
       },

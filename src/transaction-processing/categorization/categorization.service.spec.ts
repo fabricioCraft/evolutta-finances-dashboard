@@ -45,8 +45,24 @@ describe('CategorizationService', () => {
     it('should return the correct category ID based on a simple keyword match', () => {
       const description = 'Pagamento Fatura AWS Services';
       const rules = [
-        { keyword: 'GOOGLE', categoryId: 'cat_software', rule_type: 'CONTAINS' },
-        { keyword: 'AWS', categoryId: 'cat_infra', rule_type: 'CONTAINS' }
+        { 
+          id: '1', 
+          keyword: 'GOOGLE', 
+          categoryId: 'cat_software', 
+          rule_type: 'CONTAINS',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          normalizedDescription: null
+        },
+        { 
+          id: '2', 
+          keyword: 'AWS', 
+          categoryId: 'cat_infra', 
+          rule_type: 'CONTAINS',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          normalizedDescription: null
+        }
       ];
 
       const result = service.categorize(description, rules);
@@ -56,8 +72,24 @@ describe('CategorizationService', () => {
     it('should return a default "uncategorized" ID if no rules match', () => {
       const description = 'Padaria do Bairro';
       const rules = [
-        { keyword: 'GOOGLE', categoryId: 'cat_software', rule_type: 'CONTAINS' },
-        { keyword: 'AWS', categoryId: 'cat_infra', rule_type: 'CONTAINS' }
+        { 
+          id: '3', 
+          keyword: 'GOOGLE', 
+          categoryId: 'cat_software', 
+          rule_type: 'CONTAINS',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          normalizedDescription: null
+        },
+        { 
+          id: '4', 
+          keyword: 'AWS', 
+          categoryId: 'cat_infra', 
+          rule_type: 'CONTAINS',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          normalizedDescription: null
+        }
       ];
 
       const result = service.categorize(description, rules);
@@ -96,7 +128,8 @@ describe('CategorizationService', () => {
       expect(mockRulesRepository.create).toHaveBeenCalledWith({
         keyword: 'ifood',
         categoryId: 'cat_food',
-        rule_type: 'CONTAINS'
+        rule_type: 'CONTAINS',
+        normalizedDescription: null
       });
     });
   });

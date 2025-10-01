@@ -5,9 +5,10 @@ import { TransactionsService } from './transactions.service';
 import { PrismaTransactionsRepository } from './transactions.repository';
 import { PrismaModule } from '../prisma.module';
 import { LoggerMiddleware } from '../common/middleware/logger.middleware';
+import { SupabaseModule } from '../supabase/supabase.module';
 
 @Module({
-  imports: [TransactionProcessingModule, PrismaModule],
+  imports: [TransactionProcessingModule, PrismaModule, SupabaseModule],
   controllers: [TransactionsController],
   providers: [TransactionsService, PrismaTransactionsRepository]
 })

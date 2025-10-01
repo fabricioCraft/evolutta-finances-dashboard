@@ -1,9 +1,15 @@
 import { Controller, Patch, Param, Body, NotFoundException, Get, Query, UseGuards } from '@nestjs/common';
-import { User } from '@supabase/supabase-js';
 import { CategorizationService } from '../transaction-processing/categorization/categorization.service';
 import { TransactionsService } from './transactions.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { GetUser } from '../auth/get-user.decorator';
+
+// Tipo personalizado para User (compatível com Supabase Auth)
+interface User {
+  id: string;
+  email?: string;
+  [key: string]: any;
+}
 
 // DTO para validação dos dados de entrada
 export class UpdateCategoryDto {

@@ -8,7 +8,7 @@ export class ReportsService {
     private readonly reportsRepository: IReportsRepository,
   ) {}
 
-  async getMonthlySummary(year: number, month: number): Promise<any> {
+  async getMonthlySummary(year: number, month: number, userId: string): Promise<any> {
     // Calcular o startDate (primeiro dia do mês/ano fornecido)
     const startDate = new Date(year, month - 1, 1);
     
@@ -18,7 +18,8 @@ export class ReportsService {
     // Chamar o método do repositório com as datas calculadas
     const summaryData = await this.reportsRepository.getSummaryByDateRange(
       startDate,
-      endDate
+      endDate,
+      userId
     );
 
     // O repositório já retorna um Record<string, number>, então retornamos diretamente

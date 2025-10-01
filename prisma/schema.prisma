@@ -8,48 +8,62 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model User {
-  id           String        @id // Corresponde ao ID do Supabase Auth
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  
-  // Relações
-  transactions Transaction[]
-  categories   Category[]
+model CategorizationRule {
+  id                    String   @id
+  keyword               String   @unique
+  categoryId            String
+  rule_type             String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime
+  normalizedDescription String?
+  Category              Category @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Category {
-  id        String   @id @default(cuid())
-  name      String
-  userId    String   // Chave estrangeira para o usuário proprietário
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  // Relação com o usuário
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  @@unique([name, userId]) // Nome único por usuário
+  id                 String               @id
+  name               String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime
+  userId             String
+  CategorizationRule CategorizationRule[]
+  User               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Transaction        Transaction[]
+
+  @@unique([name, userId])
 }
 
-model CategorizationRule {
-  id         String   @id @default(cuid())
-  keyword    String   @unique
-  categoryId String
-  rule_type  String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model RawTransactions {
+  belvo_id         String   @unique
+  amount           Decimal  @db.Decimal
+  raw_description  String?
+  transaction_date DateTime @db.Timestamptz(6)
+  type             String
+  account_id       String?
+  raw_payload      Json
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+  status           String   @default("PENDING")
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 }
 
 model Transaction {
-  id          String   @id @default(cuid())
-  description String
-  amount      Float
-  categoryId  String
-  userId      String   // Chave estrangeira para o usuário proprietário
-  date        DateTime @default(now())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  // Relação com o usuário
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                 String   @id
+  description        String
+  amount             Float
+  categoryId         String
+  date               DateTime @default(now())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime
+  userId             String
+  cleanedDescription String?
+  Category           Category @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id          String        @id
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime
+  Category    Category[]
+  Transaction Transaction[]
 }

@@ -3,9 +3,10 @@ import { CategoriesController } from './categories.controller';
 import { CategoriesService } from './categories.service';
 import { PrismaCategoriesRepository } from './categories.repository';
 import { PrismaModule } from '../prisma.module';
+import { SupabaseModule } from '../supabase/supabase.module';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, SupabaseModule],
   controllers: [CategoriesController],
   providers: [
     CategoriesService,

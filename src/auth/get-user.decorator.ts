@@ -1,5 +1,11 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { User } from '@supabase/supabase-js';
+
+// Tipo personalizado para User (compatível com Supabase Auth)
+interface User {
+  id: string;
+  email?: string;
+  [key: string]: any;
+}
 
 export const GetUser = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): User => {

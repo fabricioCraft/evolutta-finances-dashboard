@@ -1,6 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ReportsController } from './reports.controller';
 import { ReportsService } from './reports.service';
+import { AuthGuard } from '../auth/auth.guard';
+import { SUPABASE_CLIENT } from '../supabase/supabase.provider';
+
+// Tipo personalizado para User (compatível com Supabase Auth)
+interface User {
+  id: string;
+  email?: string;
+  [key: string]: any;
+}
 
 describe('ReportsController', () => {
   let controller: ReportsController;
@@ -11,6 +20,13 @@ describe('ReportsController', () => {
   };
 
   beforeEach(async () => {
+    // Criar mock do SupabaseClient
+    const mockSupabaseClient = {
+      auth: {
+        getUser: jest.fn(),
+      },
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ReportsController],
       providers: [
@@ -18,6 +34,11 @@ describe('ReportsController', () => {
           provide: ReportsService,
           useValue: mockReportsService,
         },
+        {
+          provide: SUPABASE_CLIENT,
+          useValue: mockSupabaseClient,
+        },
+        AuthGuard,
       ],
     }).compile();
 
@@ -30,10 +51,14 @@ describe('ReportsController', () => {
   });
 
   describe('getMonthlySummary', () => {
-    it('should call the service with year and month from query params', async () => {
+    it('should call the service with year, month and userId from authenticated user', async () => {
       // Definir year e month como strings, simulando a URL
       const yearString = '2025';
       const monthString = '10';
+      const mockUser = {
+        id: 'test-user-123',
+        email: 'test@example.com',
+      } as User;
 
       // Simular o retorno do serviço (um objeto com os totais por categoria)
       const mockSummaryData = [
@@ -46,13 +71,14 @@ describe('ReportsController', () => {
       // Configurar o mock do reportsService.getMonthlySummary para retornar os dados mockados
       reportsService.getMonthlySummary.mockResolvedValue(mockSummaryData);
 
-      // Chamar o método controller.getMonthlySummary(year, month) (que ainda não existe)
-      const result = await controller.getMonthlySummary(yearString, monthString);
+      // Chamar o método controller.getMonthlySummary(year, month, user)
+      const result = await controller.getMonthlySummary(yearString, monthString, mockUser);
 
-      // Verificar se o método do serviço foi chamado com os year e month convertidos para números
+      // Verificar se o método do serviço foi chamado com os year, month e userId
       expect(reportsService.getMonthlySummary).toHaveBeenCalledWith(
         parseInt(yearString, 10), // 2025
-        parseInt(monthString, 10) // 10
+        parseInt(monthString, 10), // 10
+        mockUser.id // test-user-123
       );
       expect(reportsService.getMonthlySummary).toHaveBeenCalledTimes(1);
 

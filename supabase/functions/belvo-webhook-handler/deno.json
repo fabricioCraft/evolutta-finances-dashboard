@@ -1,0 +1,13 @@
+{
+  "imports": {
+    "@supabase/functions-js": "jsr:@supabase/functions-js@2.4.1",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
+  },
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["deno.ns", "deno.window", "dom", "es2022"],
+    "strict": false,
+    "types": ["./types.d.ts"],
+    "moduleResolution": "bundler"
+  }
+}
