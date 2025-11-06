@@ -1,8 +1,8 @@
 // @ts-nocheck
 // @ts-nocheck
 // src/components/ChartData.tsx 
-import { getTransactions } from "@/services/api"; 
-import { processPieChartData } from "@/lib/chartUtils"; 
+import { getTransactions } from "../services/api"; 
+import { processPieChartData } from "../lib/chartUtils"; 
 import ExpensesPieChart from "./ExpensesPieChart"; 
 
 export default async function ChartData() { 

@@ -11,7 +11,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="pt-BR" className="dark">
       {/* Ativa o Dark Mode */}
       <head>
         {/* Importa a fonte Poppins */}

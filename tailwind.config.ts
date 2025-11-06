@@ -1,4 +1,3 @@
-// @ts-nocheck
 // tailwind.config.ts
 import type { Config } from 'tailwindcss';
 
@@ -8,7 +7,7 @@ const config: Config = {
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/**/*.{js,ts,jsx,tsx,mdx}', // Adicione o diretório src
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -16,9 +15,7 @@ const config: Config = {
         sans: ['Poppins', 'sans-serif'], // Define Poppins como a fonte padrão
       },
       colors: {
-        'brand-dark': '#1a2e35',
         'brand-primary': '#0070f3',
-        'brand-light': '#f9fafb',
         'dark-bg': '#111827', // Fundo principal do dark mode
         'dark-card': '#1F2937', // Fundo dos cards
         'dark-border': '#374151', // Cor da borda
@@ -30,5 +27,4 @@ const config: Config = {
   },
   plugins: [],
 };
-
 export default config;

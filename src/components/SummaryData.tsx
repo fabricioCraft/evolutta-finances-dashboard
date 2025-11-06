@@ -1,6 +1,6 @@
 // @ts-nocheck
 // src/components/SummaryData.tsx 
-import { getMonthlySummary } from "@/services/api"; 
+import { getMonthlySummary } from "../services/api"; 
 import StatCard from "./StatCard"; 
 import { ArrowUpRight, ArrowDownLeft, Scale } from 'lucide-react'; 
 

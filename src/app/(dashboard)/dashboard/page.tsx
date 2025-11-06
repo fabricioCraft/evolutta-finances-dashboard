@@ -1,9 +1,9 @@
 // @ts-nocheck
 // src/app/(dashboard)/dashboard/page.tsx 
  import { Suspense } from 'react'; 
- import WidgetContainer from '@/components/WidgetContainer'; 
- import SummaryData from '@/components/SummaryData'; 
- import ChartData from '@/components/ChartData'; 
+ import WidgetContainer from '../../../components/WidgetContainer'; 
+ import SummaryData from '../../../components/SummaryData'; 
+ import ChartData from '../../../components/ChartData'; 
  
  const SummarySkeleton = () => ( 
    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse"> 
