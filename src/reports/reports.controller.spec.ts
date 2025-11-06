@@ -43,7 +43,9 @@ describe('ReportsController', () => {
     }).compile();
 
     controller = module.get<ReportsController>(ReportsController);
-    reportsService = module.get<ReportsService>(ReportsService) as jest.Mocked<ReportsService>;
+    reportsService = module.get<ReportsService>(
+      ReportsService,
+    ) as jest.Mocked<ReportsService>;
   });
 
   it('should be defined', () => {
@@ -62,23 +64,27 @@ describe('ReportsController', () => {
 
       // Simular o retorno do serviço (um objeto com os totais por categoria)
       const mockSummaryData = [
-        { categoryName: 'Alimentação', total: -500.00 },
-        { categoryName: 'Transporte', total: -200.00 },
-        { categoryName: 'Lazer', total: -150.00 },
-        { categoryName: 'Salário', total: 3000.00 },
+        { categoryName: 'Alimentação', total: -500.0 },
+        { categoryName: 'Transporte', total: -200.0 },
+        { categoryName: 'Lazer', total: -150.0 },
+        { categoryName: 'Salário', total: 3000.0 },
       ];
 
       // Configurar o mock do reportsService.getMonthlySummary para retornar os dados mockados
       reportsService.getMonthlySummary.mockResolvedValue(mockSummaryData);
 
       // Chamar o método controller.getMonthlySummary(year, month, user)
-      const result = await controller.getMonthlySummary(yearString, monthString, mockUser);
+      const result = await controller.getMonthlySummary(
+        yearString,
+        monthString,
+        mockUser,
+      );
 
       // Verificar se o método do serviço foi chamado com os year, month e userId
       expect(reportsService.getMonthlySummary).toHaveBeenCalledWith(
         parseInt(yearString, 10), // 2025
         parseInt(monthString, 10), // 10
-        mockUser.id // test-user-123
+        mockUser.id, // test-user-123
       );
       expect(reportsService.getMonthlySummary).toHaveBeenCalledTimes(1);
 

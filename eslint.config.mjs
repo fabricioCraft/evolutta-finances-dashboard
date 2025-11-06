@@ -6,7 +6,16 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['eslint.config.mjs'],
+    ignores: [
+      'eslint.config.mjs',
+      // Ignore Next.js/React frontend files in this backend workspace
+      'src/app/**',
+      'src/components/**',
+      // Ignore Tailwind config
+      'tailwind.config.ts',
+      // Ignore public assets
+      'public/**'
+    ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,

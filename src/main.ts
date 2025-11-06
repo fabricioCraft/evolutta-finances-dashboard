@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
   // Enable CORS for cross-origin requests
   app.enableCors({
     origin: [
@@ -11,6 +11,20 @@ async function bootstrap() {
       'http://127.0.0.1:3000',
       'https://localhost:3000',
       'https://127.0.0.1:3000',
+      // Next.js dev default in this project
+      'http://localhost:3333',
+      'http://127.0.0.1:3333',
+      'https://localhost:3333',
+      'https://127.0.0.1:3333',
+      // Additional Next.js dev ports used in this workspace
+      'http://localhost:3334',
+      'http://127.0.0.1:3334',
+      'https://localhost:3334',
+      'https://127.0.0.1:3334',
+      'http://localhost:3335',
+      'http://127.0.0.1:3335',
+      'https://localhost:3335',
+      'https://127.0.0.1:3335',
       // Add your production frontend URL here
       // 'https://your-frontend-domain.com'
     ],
@@ -18,7 +32,10 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: true,
   });
-  
-  await app.listen(process.env.PORT ?? 3000);
+
+  const port = parseInt(process.env.PORT ?? '4000', 10);
+  await app.listen(port);
+  console.log(`Backend listening on http://localhost:${port}`);
 }
+
 bootstrap();

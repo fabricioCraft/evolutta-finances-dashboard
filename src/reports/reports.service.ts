@@ -8,10 +8,14 @@ export class ReportsService {
     private readonly reportsRepository: IReportsRepository,
   ) {}
 
-  async getMonthlySummary(year: number, month: number, userId: string): Promise<any> {
+  async getMonthlySummary(
+    year: number,
+    month: number,
+    userId: string,
+  ): Promise<any> {
     // Calcular o startDate (primeiro dia do mês/ano fornecido)
     const startDate = new Date(year, month - 1, 1);
-    
+
     // Calcular o endDate (último dia do mesmo mês/ano)
     const endDate = new Date(year, month, 0);
 
@@ -19,7 +23,7 @@ export class ReportsService {
     const summaryData = await this.reportsRepository.getSummaryByDateRange(
       startDate,
       endDate,
-      userId
+      userId,
     );
 
     // O repositório já retorna um Record<string, number>, então retornamos diretamente

@@ -74,7 +74,7 @@ describe('TransactionsController', () => {
         id: '1',
         description: 'Compra no supermercado',
         cleanedDescription: 'compra no supermercado',
-        amount: -150.50,
+        amount: -150.5,
         date: new Date('2024-01-15'),
         categoryId: 'groceries',
         userId: 'test-user-id',
@@ -85,7 +85,7 @@ describe('TransactionsController', () => {
         id: '2',
         description: 'Salário',
         cleanedDescription: 'salario',
-        amount: 3000.00,
+        amount: 3000.0,
         date: new Date('2024-01-01'),
         categoryId: 'salary',
         userId: 'test-user-id',
@@ -104,13 +104,17 @@ describe('TransactionsController', () => {
     } as User;
 
     // Chamar o método controller.findAll(startDateString, endDateString, mockUser)
-    const result = await controller.findAll(startDateString, endDateString, mockUser);
+    const result = await controller.findAll(
+      startDateString,
+      endDateString,
+      mockUser,
+    );
 
     // Verificar que o método findAllByDateRange do serviço foi chamado com userId e objetos Date reais
     expect(service.findAllByDateRange).toHaveBeenCalledWith(
       mockUser.id,
       new Date(startDateString),
-      new Date(endDateString)
+      new Date(endDateString),
     );
     expect(service.findAllByDateRange).toHaveBeenCalledTimes(1);
 

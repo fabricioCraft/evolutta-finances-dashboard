@@ -4,7 +4,11 @@ import { PrismaService } from '../prisma.service';
 export interface ITransactionsRepository {
   findById(id: string): Promise<any>;
   updateCategory(id: string, categoryId: string): Promise<any>;
-  findAllByDateRange(userId: string, startDate: Date, endDate: Date): Promise<any[]>;
+  findAllByDateRange(
+    userId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<any[]>;
 }
 
 @Injectable()
@@ -18,7 +22,7 @@ export class PrismaTransactionsRepository implements ITransactionsRepository {
    */
   async findById(id: string) {
     return this.prisma.transaction.findUnique({
-      where: { id }
+      where: { id },
     });
   }
 
@@ -31,7 +35,7 @@ export class PrismaTransactionsRepository implements ITransactionsRepository {
   async updateCategory(id: string, categoryId: string) {
     return this.prisma.transaction.update({
       where: { id },
-      data: { categoryId }
+      data: { categoryId },
     });
   }
 
@@ -48,12 +52,12 @@ export class PrismaTransactionsRepository implements ITransactionsRepository {
         userId: userId, // filtrar por usuário
         date: {
           gte: startDate, // maior ou igual a startDate
-          lte: endDate,   // menor ou igual a endDate
-        }
+          lte: endDate, // menor ou igual a endDate
+        },
       },
       orderBy: {
-        date: 'desc' // ordenar por data decrescente
-      }
+        date: 'desc', // ordenar por data decrescente
+      },
     });
   }
 }

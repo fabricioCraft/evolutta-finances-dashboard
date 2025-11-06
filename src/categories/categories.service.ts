@@ -18,33 +18,44 @@ export class CategoriesService {
     return this.categoriesRepository.findAll(userId);
   }
 
-  async update(id: string, updateCategoryDto: UpdateCategoryDto, userId: string) {
+  async update(
+    id: string,
+    updateCategoryDto: UpdateCategoryDto,
+    userId: string,
+  ) {
     // Verificar se a categoria existe e se pertence ao usuário
     const category = await this.categoriesRepository.findById(id);
-    
+
     if (!category) {
       throw new ForbiddenException('Category not found');
     }
-    
+
     if (category.userId !== userId) {
-      throw new ForbiddenException('You do not have permission to update this category');
+      throw new ForbiddenException(
+        'You do not have permission to update this category',
+      );
     }
-    
-    return this.categoriesRepository.update(id, updateCategoryDto as { name: string });
+
+    return this.categoriesRepository.update(
+      id,
+      updateCategoryDto as { name: string },
+    );
   }
 
   async remove(id: string, userId: string) {
     // Verificar se a categoria existe e se pertence ao usuário
     const category = await this.categoriesRepository.findById(id);
-    
+
     if (!category) {
       throw new ForbiddenException('Category not found');
     }
-    
+
     if (category.userId !== userId) {
-      throw new ForbiddenException('You do not have permission to remove this category');
+      throw new ForbiddenException(
+        'You do not have permission to remove this category',
+      );
     }
-    
+
     return this.categoriesRepository.remove(id);
   }
 }

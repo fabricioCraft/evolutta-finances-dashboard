@@ -28,7 +28,9 @@ describe('CategoriesService', () => {
     }).compile();
 
     service = module.get<CategoriesService>(CategoriesService);
-    categoriesRepository = module.get<ICategoriesRepository>('ICategoriesRepository') as jest.Mocked<ICategoriesRepository>;
+    categoriesRepository = module.get<ICategoriesRepository>(
+      'ICategoriesRepository',
+    ) as jest.Mocked<ICategoriesRepository>;
   });
 
   afterEach(() => {
@@ -61,7 +63,10 @@ describe('CategoriesService', () => {
 
     // 5. Verificações
     // a. Verificar se o repositório foi chamado com o DTO e userId corretos
-    expect(categoriesRepository.create).toHaveBeenCalledWith(createCategoryDto, userId);
+    expect(categoriesRepository.create).toHaveBeenCalledWith(
+      createCategoryDto,
+      userId,
+    );
     expect(categoriesRepository.create).toHaveBeenCalledTimes(1);
 
     // b. Verificar se o resultado é o mockCreatedCategory
@@ -114,7 +119,7 @@ describe('CategoriesService', () => {
       const categoryId = '1';
       const userId = 'test-user-123';
       const updateCategoryDto = { name: 'Despesas de Marketing' };
-      
+
       const mockCategory = {
         id: '1',
         name: 'Categoria Original',
@@ -122,7 +127,7 @@ describe('CategoriesService', () => {
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-01'),
       };
-      
+
       const mockUpdatedCategory = {
         id: '1',
         name: 'Despesas de Marketing',
@@ -135,12 +140,19 @@ describe('CategoriesService', () => {
       categoriesRepository.update.mockResolvedValue(mockUpdatedCategory);
 
       // Act
-      const result = await service.update(categoryId, updateCategoryDto, userId);
+      const result = await service.update(
+        categoryId,
+        updateCategoryDto,
+        userId,
+      );
 
       // Assert
       expect(categoriesRepository.findById).toHaveBeenCalledWith(categoryId);
       expect(categoriesRepository.findById).toHaveBeenCalledTimes(1);
-      expect(categoriesRepository.update).toHaveBeenCalledWith(categoryId, updateCategoryDto);
+      expect(categoriesRepository.update).toHaveBeenCalledWith(
+        categoryId,
+        updateCategoryDto,
+      );
       expect(categoriesRepository.update).toHaveBeenCalledTimes(1);
       expect(result).toEqual(mockUpdatedCategory);
     });
@@ -150,7 +162,7 @@ describe('CategoriesService', () => {
       const categoryId = '1';
       const userId = 'test-user-123';
       const updateCategoryDto = { name: 'Despesas de Marketing' };
-      
+
       const mockCategory = {
         id: '1',
         name: 'Categoria Original',
@@ -162,9 +174,10 @@ describe('CategoriesService', () => {
       categoriesRepository.findById.mockResolvedValue(mockCategory);
 
       // Act & Assert
-      await expect(service.update(categoryId, updateCategoryDto, userId))
-        .rejects.toThrow(ForbiddenException);
-      
+      await expect(
+        service.update(categoryId, updateCategoryDto, userId),
+      ).rejects.toThrow(ForbiddenException);
+
       expect(categoriesRepository.findById).toHaveBeenCalledWith(categoryId);
       expect(categoriesRepository.findById).toHaveBeenCalledTimes(1);
       expect(categoriesRepository.update).not.toHaveBeenCalled();
@@ -176,7 +189,7 @@ describe('CategoriesService', () => {
       // Arrange
       const categoryId = '1';
       const userId = 'test-user-123';
-      
+
       const mockCategory = {
         id: '1',
         name: 'Categoria Original',
@@ -184,7 +197,7 @@ describe('CategoriesService', () => {
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-01'),
       };
-      
+
       const mockDeletedCategory = {
         id: categoryId,
         name: 'Categoria Deletada',
@@ -211,7 +224,7 @@ describe('CategoriesService', () => {
       // Arrange
       const categoryId = '1';
       const userId = 'test-user-123';
-      
+
       const mockCategory = {
         id: '1',
         name: 'Categoria Original',
@@ -223,9 +236,10 @@ describe('CategoriesService', () => {
       categoriesRepository.findById.mockResolvedValue(mockCategory);
 
       // Act & Assert
-      await expect(service.remove(categoryId, userId))
-        .rejects.toThrow(ForbiddenException);
-      
+      await expect(service.remove(categoryId, userId)).rejects.toThrow(
+        ForbiddenException,
+      );
+
       expect(categoriesRepository.findById).toHaveBeenCalledWith(categoryId);
       expect(categoriesRepository.findById).toHaveBeenCalledTimes(1);
       expect(categoriesRepository.remove).not.toHaveBeenCalled();

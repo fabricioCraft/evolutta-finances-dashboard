@@ -7,6 +7,13 @@
     "**/*spec.ts",
     "supabase/**/*",
     "supabase/functions/**/*",
-    "**/supabase/functions/**/*"
+    "**/supabase/functions/**/*",
+    // Exclude Next.js/React frontend files from NestJS build
+    "src/app/**/*",
+    "src/components/**/*",
+    // Exclude Tailwind config from build
+    "tailwind.config.ts",
+    // Exclude public assets
+    "public/**/*"
   ]
 }

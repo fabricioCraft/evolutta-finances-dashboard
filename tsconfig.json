@@ -25,6 +25,18 @@
   "exclude": [
     "supabase/**/*",
     "supabase/functions/**/*",
-    "**/supabase/functions/**/*"
+    "**/supabase/functions/**/*",
+    // Exclude Next.js/React frontend files from NestJS TS project
+    "src/app/**/*",
+    "src/components/**/*",
+    // Exclude Tailwind config from TS compiler
+    "tailwind.config.ts",
+    // Exclude public assets
+    "public/**/*"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "scripts/**/*.ts",
+    "test/**/*.ts"
   ]
 }

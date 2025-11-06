@@ -10,7 +10,15 @@ import { ConnectionsModule } from './connections/connections.module';
 import { ReportsModule } from './reports/reports.module';
 
 @Module({
-  imports: [PrismaModule, TransactionProcessingModule, TransactionsModule, CategoriesModule, AuthModule, ConnectionsModule, ReportsModule],
+  imports: [
+    PrismaModule,
+    TransactionProcessingModule,
+    TransactionsModule,
+    CategoriesModule,
+    AuthModule,
+    ConnectionsModule,
+    ReportsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

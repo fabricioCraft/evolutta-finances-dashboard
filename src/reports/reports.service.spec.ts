@@ -43,13 +43,15 @@ describe('ReportsService', () => {
 
       // 3. Simular o retorno do repositório
       const mockSummaryData = [
-        { categoryName: 'Alimentação', total: -500.00 },
-        { categoryName: 'Transporte', total: -200.00 },
-        { categoryName: 'Lazer', total: -150.00 },
+        { categoryName: 'Alimentação', total: -500.0 },
+        { categoryName: 'Transporte', total: -200.0 },
+        { categoryName: 'Lazer', total: -150.0 },
       ];
 
       // 4. Configurar o mock do reportsRepository.getSummaryByDateRange
-      reportsRepository.getSummaryByDateRange.mockResolvedValue(mockSummaryData);
+      reportsRepository.getSummaryByDateRange.mockResolvedValue(
+        mockSummaryData,
+      );
 
       // 5. Chamar o método service.getMonthlySummary(year, month, userId)
       const result = await service.getMonthlySummary(year, month, userId);
@@ -58,7 +60,7 @@ describe('ReportsService', () => {
       expect(reportsRepository.getSummaryByDateRange).toHaveBeenCalledWith(
         expectedStartDate,
         expectedEndDate,
-        userId
+        userId,
       );
       expect(reportsRepository.getSummaryByDateRange).toHaveBeenCalledTimes(1);
 

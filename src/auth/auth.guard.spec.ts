@@ -53,7 +53,9 @@ describe('AuthGuard', () => {
     };
 
     // Chamar guard.canActivate(mockContext) e esperar que ele lance UnauthorizedException
-    await expect(guard.canActivate(mockContext)).rejects.toThrow(UnauthorizedException);
+    await expect(guard.canActivate(mockContext)).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 
   it('should deny access if the authorization header is not in the "Bearer [TOKEN]" format', async () => {
@@ -79,14 +81,16 @@ describe('AuthGuard', () => {
     };
 
     // Chamar guard.canActivate(mockContext) e esperar que ele lance UnauthorizedException
-    await expect(guard.canActivate(mockContext)).rejects.toThrow(UnauthorizedException);
+    await expect(guard.canActivate(mockContext)).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 
   it('should deny access if the token is invalid or expired', async () => {
     // Configurar o mock para retornar erro
     mockSupabaseClient.auth.getUser.mockResolvedValue({
       data: { user: null },
-      error: new Error('Invalid token')
+      error: new Error('Invalid token'),
     });
 
     // Simular um objeto de requisição com cabeçalho authorization válido mas token falso
@@ -111,20 +115,22 @@ describe('AuthGuard', () => {
     };
 
     // Chamar guard.canActivate(mockContext) e esperar que ele lance UnauthorizedException
-    await expect(guard.canActivate(mockContext)).rejects.toThrow(UnauthorizedException);
+    await expect(guard.canActivate(mockContext)).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 
   it('should grant access and attach the user to the request if the token is valid', async () => {
     // Mock do usuário válido
     const mockUser = {
       id: 'user-123',
-      email: 'test@example.com'
+      email: 'test@example.com',
     };
 
     // Configurar o mock para retornar sucesso
     mockSupabaseClient.auth.getUser.mockResolvedValue({
       data: { user: mockUser },
-      error: null
+      error: null,
     });
 
     // Simular um objeto de requisição com cabeçalho authorization válido
@@ -157,6 +163,8 @@ describe('AuthGuard', () => {
     expect(mockRequest.user).toEqual(mockUser);
 
     // Verificar se o método getUser foi chamado com o token correto
-    expect(mockSupabaseClient.auth.getUser).toHaveBeenCalledWith('valid_token_123');
+    expect(mockSupabaseClient.auth.getUser).toHaveBeenCalledWith(
+      'valid_token_123',
+    );
   });
 });

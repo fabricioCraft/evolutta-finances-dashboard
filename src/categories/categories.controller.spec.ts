@@ -46,7 +46,9 @@ describe('CategoriesController', () => {
     }).compile();
 
     controller = module.get<CategoriesController>(CategoriesController);
-    categoriesService = module.get<CategoriesService>(CategoriesService) as jest.Mocked<CategoriesService>;
+    categoriesService = module.get<CategoriesService>(
+      CategoriesService,
+    ) as jest.Mocked<CategoriesService>;
   });
 
   it('should be defined', () => {
@@ -71,7 +73,10 @@ describe('CategoriesController', () => {
     const result = await controller.create(createCategoryDto, mockUser);
 
     // Assert
-    expect(categoriesService.create).toHaveBeenCalledWith(createCategoryDto, 'test-user-123');
+    expect(categoriesService.create).toHaveBeenCalledWith(
+      createCategoryDto,
+      'test-user-123',
+    );
     expect(result).toBe(mockResult);
   });
 
@@ -131,10 +136,18 @@ describe('CategoriesController', () => {
       categoriesService.update.mockResolvedValue(mockResult);
 
       // Act
-      const result = await controller.update(categoryId, updateCategoryDto, mockUser);
+      const result = await controller.update(
+        categoryId,
+        updateCategoryDto,
+        mockUser,
+      );
 
       // Assert
-      expect(categoriesService.update).toHaveBeenCalledWith(categoryId, updateCategoryDto, mockUser.id);
+      expect(categoriesService.update).toHaveBeenCalledWith(
+        categoryId,
+        updateCategoryDto,
+        mockUser.id,
+      );
       expect(result).toBe(mockResult);
     });
   });
@@ -145,19 +158,22 @@ describe('CategoriesController', () => {
       const categoryId = '1';
       const mockUser = { id: 'test-user-123' } as User;
 
-      categoriesService.remove.mockResolvedValue({ 
-        id: '1', 
-        name: 'Deleted Category', 
+      categoriesService.remove.mockResolvedValue({
+        id: '1',
+        name: 'Deleted Category',
         userId: 'test-user-123',
-        createdAt: new Date(), 
-        updatedAt: new Date() 
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
 
       // Act
       await controller.remove(categoryId, mockUser);
 
       // Assert
-      expect(categoriesService.remove).toHaveBeenCalledWith(categoryId, mockUser.id);
+      expect(categoriesService.remove).toHaveBeenCalledWith(
+        categoryId,
+        mockUser.id,
+      );
       expect(categoriesService.remove).toHaveBeenCalledTimes(1);
     });
   });

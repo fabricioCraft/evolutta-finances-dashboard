@@ -10,7 +10,7 @@ import { SupabaseModule } from '../supabase/supabase.module';
 @Module({
   imports: [TransactionProcessingModule, PrismaModule, SupabaseModule],
   controllers: [TransactionsController],
-  providers: [TransactionsService, PrismaTransactionsRepository]
+  providers: [TransactionsService, PrismaTransactionsRepository],
 })
 export class TransactionsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

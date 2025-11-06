@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CategorizationRule, RulesRepository } from './categorization/categorization.service';
+import {
+  CategorizationRule,
+  RulesRepository,
+} from './categorization/categorization.service';
 
 @Injectable()
 export class PrismaRulesRepository implements RulesRepository {
@@ -16,17 +19,19 @@ export class PrismaRulesRepository implements RulesRepository {
         rule_type: true,
         createdAt: true,
         updatedAt: true,
-        normalizedDescription: true
-      }
+        normalizedDescription: true,
+      },
     });
   }
 
-  async create(ruleData: Omit<CategorizationRule, 'id' | 'createdAt' | 'updatedAt'>): Promise<CategorizationRule> {
+  async create(
+    ruleData: Omit<CategorizationRule, 'id' | 'createdAt' | 'updatedAt'>,
+  ): Promise<CategorizationRule> {
     return this.prisma.categorizationRule.create({
       data: {
         id: crypto.randomUUID(),
         ...ruleData,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       select: {
         id: true,
@@ -35,8 +40,8 @@ export class PrismaRulesRepository implements RulesRepository {
         rule_type: true,
         createdAt: true,
         updatedAt: true,
-        normalizedDescription: true
-      }
+        normalizedDescription: true,
+      },
     });
   }
 }

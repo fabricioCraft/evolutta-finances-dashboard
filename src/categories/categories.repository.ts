@@ -23,11 +23,11 @@ export class PrismaCategoriesRepository implements ICategoriesRepository {
 
   async create(createCategoryDto: { name: string }, userId: string) {
     return this.prisma.category.create({
-      data: { 
+      data: {
         id: crypto.randomUUID(),
-        ...createCategoryDto, 
+        ...createCategoryDto,
         userId,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
     });
   }

@@ -4,9 +4,7 @@ import { BELVO_CLIENT } from '../belvo/belvo.provider';
 
 @Injectable()
 export class ConnectionsService {
-  constructor(
-    @Inject(BELVO_CLIENT) private readonly belvo: BelvoClient,
-  ) {}
+  constructor(@Inject(BELVO_CLIENT) private readonly belvo: BelvoClient) {}
 
   async getConnectToken(userId: string): Promise<string> {
     const response = await this.belvo.widgetToken.create();

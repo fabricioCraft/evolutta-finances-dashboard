@@ -8,6 +8,6 @@ import { SupabaseModule } from '../supabase/supabase.module';
 @Module({
   imports: [ConfigModule, SupabaseModule],
   providers: [ConnectionsService, belvoProvider],
-  controllers: [ConnectionsController]
+  controllers: [ConnectionsController],
 })
 export class ConnectionsModule {}

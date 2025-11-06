@@ -43,7 +43,9 @@ describe('ConnectionsController', () => {
     }).compile();
 
     controller = module.get<ConnectionsController>(ConnectionsController);
-    connectionsService = module.get<ConnectionsService>(ConnectionsService) as jest.Mocked<ConnectionsService>;
+    connectionsService = module.get<ConnectionsService>(
+      ConnectionsService,
+    ) as jest.Mocked<ConnectionsService>;
   });
 
   it('should be defined', () => {
@@ -67,7 +69,9 @@ describe('ConnectionsController', () => {
       const result = await controller.getConnectToken(mockUser);
 
       // Assert
-      expect(connectionsService.getConnectToken).toHaveBeenCalledWith(mockUser.id);
+      expect(connectionsService.getConnectToken).toHaveBeenCalledWith(
+        mockUser.id,
+      );
       expect(connectionsService.getConnectToken).toHaveBeenCalledTimes(1);
       expect(result).toBe(mockToken);
     });

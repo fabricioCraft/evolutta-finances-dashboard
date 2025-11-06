@@ -45,24 +45,24 @@ describe('CategorizationService', () => {
     it('should return the correct category ID based on a simple keyword match', () => {
       const description = 'Pagamento Fatura AWS Services';
       const rules = [
-        { 
-          id: '1', 
-          keyword: 'GOOGLE', 
-          categoryId: 'cat_software', 
+        {
+          id: '1',
+          keyword: 'GOOGLE',
+          categoryId: 'cat_software',
           rule_type: 'CONTAINS',
           createdAt: new Date(),
           updatedAt: new Date(),
-          normalizedDescription: null
+          normalizedDescription: null,
         },
-        { 
-          id: '2', 
-          keyword: 'AWS', 
-          categoryId: 'cat_infra', 
+        {
+          id: '2',
+          keyword: 'AWS',
+          categoryId: 'cat_infra',
           rule_type: 'CONTAINS',
           createdAt: new Date(),
           updatedAt: new Date(),
-          normalizedDescription: null
-        }
+          normalizedDescription: null,
+        },
       ];
 
       const result = service.categorize(description, rules);
@@ -72,24 +72,24 @@ describe('CategorizationService', () => {
     it('should return a default "uncategorized" ID if no rules match', () => {
       const description = 'Padaria do Bairro';
       const rules = [
-        { 
-          id: '3', 
-          keyword: 'GOOGLE', 
-          categoryId: 'cat_software', 
+        {
+          id: '3',
+          keyword: 'GOOGLE',
+          categoryId: 'cat_software',
           rule_type: 'CONTAINS',
           createdAt: new Date(),
           updatedAt: new Date(),
-          normalizedDescription: null
+          normalizedDescription: null,
         },
-        { 
-          id: '4', 
-          keyword: 'AWS', 
-          categoryId: 'cat_infra', 
+        {
+          id: '4',
+          keyword: 'AWS',
+          categoryId: 'cat_infra',
           rule_type: 'CONTAINS',
           createdAt: new Date(),
           updatedAt: new Date(),
-          normalizedDescription: null
-        }
+          normalizedDescription: null,
+        },
       ];
 
       const result = service.categorize(description, rules);
@@ -103,7 +103,7 @@ describe('CategorizationService', () => {
       const transaction = {
         id: 'txn_123',
         description: 'COMPRA IFOOD BRASIL',
-        categoryId: 'cat_uncategorized'
+        categoryId: 'cat_uncategorized',
       };
 
       // Simulate user's choice
@@ -115,7 +115,7 @@ describe('CategorizationService', () => {
         id: 'rule_123',
         keyword: 'ifood',
         categoryId: 'cat_food',
-        rule_type: 'CONTAINS'
+        rule_type: 'CONTAINS',
       });
 
       // Call the method
@@ -129,7 +129,7 @@ describe('CategorizationService', () => {
         keyword: 'ifood',
         categoryId: 'cat_food',
         rule_type: 'CONTAINS',
-        normalizedDescription: null
+        normalizedDescription: null,
       });
     });
   });
