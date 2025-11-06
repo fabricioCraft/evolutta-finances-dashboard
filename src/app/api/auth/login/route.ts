@@ -1,6 +1,6 @@
 // src/app/api/auth/login/route.ts
 import { NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabaseServerClient';
+import { createSupabaseServerClient } from '../../../../lib/supabaseServerClient';
 
 export async function POST(req: Request) {
   try {
@@ -9,7 +9,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Email e senha são obrigatórios.' }, { status: 400 });
     }
 
-    const supabase = createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {

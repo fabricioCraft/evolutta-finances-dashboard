@@ -18,16 +18,23 @@ export default function LoginPage() {
     e.preventDefault(); 
     setLoading(true); 
     setError(null); 
-    try { 
-      const { error } = await supabase.auth.signInWithPassword({ email, password }); 
-      if (error) throw error; 
-      router.push('/dashboard'); 
-      router.refresh(); 
-    } catch (error: any) { 
-      setError(error.message || 'Ocorreu um erro ao tentar fazer login.'); 
-    } finally { 
-      setLoading(false); 
-    } 
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error || 'Falha na autenticação.');
+      }
+      router.push('/dashboard');
+      router.refresh();
+    } catch (error: any) {
+      setError(error.message || 'Ocorreu um erro ao tentar fazer login.');
+    } finally {
+      setLoading(false);
+    }
   }; 
 
   const logoPath = '/logo.png'; // Garanta que a logo está em /public/logo.png 

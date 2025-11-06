@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from '../../lib/supabaseServerClient';
 import Header from '../../components/Header';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) {
     redirect('/login');
