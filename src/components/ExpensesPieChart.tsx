@@ -1,7 +1,10 @@
 // src/components/ExpensesPieChart.tsx
 // Componente simples para exibir dados agregados de despesas
+import type { ReactElement } from 'react';
 
-export default function ExpensesPieChart({ data }: { data: { label: string; value: number }[] }) {
+type PieData = { label: string; value: number }[];
+
+export default function ExpensesPieChart({ data }: { data: PieData }): ReactElement {
   return (
     <div className="card-dark p-4 text-gray-300">
       <h3 className="text-lg font-semibold mb-3">Distribuição de Despesas</h3>

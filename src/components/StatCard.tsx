@@ -1,8 +1,10 @@
 // src/components/StatCard.tsx 
+import type { ReactNode } from 'react';
+
 interface StatCardProps { 
   title: string; 
   value: string; 
-  icon: React.ReactNode; 
+  icon: ReactNode; 
   colorClass: string; // ex: 'text-accent-green' 
 } 
 

@@ -29,7 +29,8 @@ export async function getMonthlySummary(year?: number, month?: number): Promise<
     throw new Error(`Falha ao buscar resumo: ${res.status}`);
   }
 
-  return res.json();
+  const data: unknown = await res.json();
+  return data as SummaryResponse;
 }
 
 export async function getTransactions(startDate?: string, endDate?: string): Promise<any[]> {
@@ -51,5 +52,6 @@ export async function getTransactions(startDate?: string, endDate?: string): Pro
     throw new Error(`Falha ao buscar transações: ${res.status}`);
   }
 
-  return res.json();
+  const data: unknown = await res.json();
+  return Array.isArray(data) ? (data as any[]) : [];
 }

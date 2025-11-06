@@ -1,3 +1,29 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Tailwind v4: defina o tema via @theme para habilitar cores e fontes customizadas */
+@theme {
+  --font-sans: 'Poppins', sans-serif;
+  --color-brand-dark-blue: #1a2e35;
+  --color-brand-primary: #3b82f6;
+  --color-dark-bg: #111827;
+  --color-dark-card: #1F2937;
+  --color-dark-border: #374151;
+}
+
+/* Preferir esquema escuro e aplicar base da UI */
+:root { color-scheme: dark; }
+
+html, body { height: 100%; }
+
+body {
+  /* Garante tema escuro global e tipografia Poppins */
+  @apply bg-dark-bg text-gray-300 font-sans;
+}
+
+/* Ajustes finos para inputs e botões em tema escuro */
+input, button {
+  @apply outline-none;
+}
+
+/* Links de ação */
+a { @apply text-brand-primary; }
