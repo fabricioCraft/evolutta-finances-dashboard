@@ -1,25 +1,62 @@
 // src/lib/supabaseServerClient.ts
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
-import type { SupabaseClient } from '@supabase/supabase-js';
 
 // Server-side Supabase client with cookie-based session for App Router
-export async function createSupabaseServerClient(): Promise<SupabaseClient> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '';
-  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '';
+export const createSupabaseServerClient = () => {
+  const cookieStore = cookies();
 
-  const cookieStore = await cookies();
-  return createServerClient(url, anon, {
-    cookies: {
-      get(name: string) {
-        return cookieStore.get(name)?.value ?? '';
+  // Fallback robusto para ambientes onde cookieStore.get pode não estar disponível
+  const readCookie = (name: string): string | undefined => {
+    const getter: any = (cookieStore as any)?.get;
+    if (typeof getter === 'function') {
+      return getter.call(cookieStore, name)?.value;
+    }
+    try {
+      const hdrs: any = headers();
+      const cookieHeader: string = typeof hdrs?.get === 'function' ? (hdrs.get('cookie') ?? '') : '';
+      const parts = cookieHeader.split(';');
+      for (const part of parts) {
+        const [key, ...rest] = part.trim().split('=');
+        if (key === name) {
+          const raw = rest.join('=');
+          try {
+            return decodeURIComponent(raw);
+          } catch {
+            return raw;
+          }
+        }
+      }
+    } catch {}
+    return undefined;
+  };
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return readCookie(name);
+        },
+        set(name: string, value: string, options: any) {
+          // Em Route Handlers e Server Actions, cookies() permite escrita
+          const setter: any = (cookieStore as any)?.set;
+          if (typeof setter === 'function') {
+            try {
+              setter.call(cookieStore, name, value, options);
+            } catch {}
+          }
+        },
+        remove(name: string, options: any) {
+          const deleter: any = (cookieStore as any)?.delete;
+          if (typeof deleter === 'function') {
+            try {
+              deleter.call(cookieStore, name, options);
+            } catch {}
+          }
+        },
       },
-      set(name: string, value: string, options: any) {
-        cookieStore.set({ name, value, ...options });
-      },
-      remove(name: string, options: any) {
-        cookieStore.set({ name, value: '', ...options, maxAge: 0 });
-      },
-    },
-  });
-}
+    }
+  );
+};

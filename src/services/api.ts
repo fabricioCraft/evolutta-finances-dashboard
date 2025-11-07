@@ -9,7 +9,8 @@ type SummaryResponse = {
   balance: number;
 };
 
-export async function getMonthlySummary(year?: number, month?: number): Promise<SummaryResponse> {
+// Permite injetar token de autorização explicitamente, evitando depender de variáveis públicas
+export async function getMonthlySummary(year?: number, month?: number, authToken?: string): Promise<SummaryResponse> {
   const now = new Date();
   const y = year ?? now.getFullYear();
   const m = month ?? now.getMonth() + 1;
@@ -19,8 +20,9 @@ export async function getMonthlySummary(year?: number, month?: number): Promise<
     method: 'GET',
     headers: {
       'Accept': 'application/json',
-      // Se necessário, injete Authorization com token do Supabase
-      ...(process.env.NEXT_PUBLIC_AUTH_TOKEN ? { Authorization: `Bearer ${process.env.NEXT_PUBLIC_AUTH_TOKEN}` } : {}),
+      // Preferir token passado por parâmetro; fallback para variável pública se existir
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      ...(!authToken && process.env.NEXT_PUBLIC_AUTH_TOKEN ? { Authorization: `Bearer ${process.env.NEXT_PUBLIC_AUTH_TOKEN}` } : {}),
     },
     credentials: 'include',
   });
@@ -33,7 +35,8 @@ export async function getMonthlySummary(year?: number, month?: number): Promise<
   return data as SummaryResponse;
 }
 
-export async function getTransactions(startDate?: string, endDate?: string): Promise<any[]> {
+// Permite injetar token de autorização explicitamente
+export async function getTransactions(startDate?: string, endDate?: string, authToken?: string): Promise<any[]> {
   const params = new URLSearchParams();
   if (startDate) params.set('startDate', startDate);
   if (endDate) params.set('endDate', endDate);
@@ -43,7 +46,8 @@ export async function getTransactions(startDate?: string, endDate?: string): Pro
     method: 'GET',
     headers: {
       'Accept': 'application/json',
-      ...(process.env.NEXT_PUBLIC_AUTH_TOKEN ? { Authorization: `Bearer ${process.env.NEXT_PUBLIC_AUTH_TOKEN}` } : {}),
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      ...(!authToken && process.env.NEXT_PUBLIC_AUTH_TOKEN ? { Authorization: `Bearer ${process.env.NEXT_PUBLIC_AUTH_TOKEN}` } : {}),
     },
     credentials: 'include',
   });

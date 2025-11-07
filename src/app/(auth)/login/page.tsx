@@ -22,14 +22,15 @@ export default function LoginPage() {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data?.error || 'Falha na autenticação.');
       }
-      router.push('/dashboard');
-      router.refresh();
+      // Usar navegação completa para garantir que cookies HttpOnly sejam considerados pelo SSR
+      window.location.assign('/dashboard');
     } catch (error: any) {
       setError(error.message || 'Ocorreu um erro ao tentar fazer login.');
     } finally {

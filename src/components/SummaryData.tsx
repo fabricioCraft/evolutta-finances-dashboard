@@ -1,14 +1,29 @@
-// @ts-nocheck
 // src/components/SummaryData.tsx 
 import { getMonthlySummary } from "../services/api"; 
 import StatCard from "./StatCard"; 
 import { ArrowUpRight, ArrowDownLeft, Scale } from 'lucide-react'; 
+import { createSupabaseServerClient } from "../lib/supabaseServerClient";
 
 const formatCurrency = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value); 
 
 export default async function SummaryData() { 
   try { 
-    const summary = await getMonthlySummary(); 
+    // Obter sessão atual do Supabase no servidor
+    const supabase = createSupabaseServerClient();
+    const { data: { session } } = await supabase.auth.getSession();
+
+    // Caso não haja sessão, exibir um estado amigável em vez de quebrar a página
+    if (!session) {
+      return (
+        <div className="grid grid-cols-1">
+          <div className="p-4 bg-dark-card border border-dark-border rounded-xl text-center text-gray-400">
+            <p className="text-sm">Faça login para ver o resumo financeiro.</p>
+          </div>
+        </div>
+      );
+    }
+
+    const summary = await getMonthlySummary(undefined, undefined, session.access_token); 
     return ( 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6"> 
         <StatCard title="Receitas" value={formatCurrency(summary.revenues ?? 0)} icon={<ArrowUpRight size={24} />} colorClass="text-accent-green" /> 
