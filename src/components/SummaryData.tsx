@@ -9,7 +9,7 @@ const formatCurrency = (value: number) => new Intl.NumberFormat('pt-BR', { style
 export default async function SummaryData() { 
   try { 
     // Obter sessão atual do Supabase no servidor
-    const supabase = createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
     const { data: { session } } = await supabase.auth.getSession();
 
     // Caso não haja sessão, exibir um estado amigável em vez de quebrar a página

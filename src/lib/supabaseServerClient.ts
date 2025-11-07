@@ -3,17 +3,17 @@ import { cookies, headers } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
 
 // Server-side Supabase client with cookie-based session for App Router
-export const createSupabaseServerClient = () => {
-  const cookieStore = cookies();
+export const createSupabaseServerClient = async () => {
+  const cookieStore = await cookies();
 
   // Fallback robusto para ambientes onde cookieStore.get pode não estar disponível
-  const readCookie = (name: string): string | undefined => {
+  const readCookie = async (name: string): Promise<string | undefined> => {
     const getter: any = (cookieStore as any)?.get;
     if (typeof getter === 'function') {
       return getter.call(cookieStore, name)?.value;
     }
     try {
-      const hdrs: any = headers();
+      const hdrs: any = await headers();
       const cookieHeader: string = typeof hdrs?.get === 'function' ? (hdrs.get('cookie') ?? '') : '';
       const parts = cookieHeader.split(';');
       for (const part of parts) {
@@ -31,13 +31,21 @@ export const createSupabaseServerClient = () => {
     return undefined;
   };
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl!,
+    supabaseAnonKey!,
     {
       cookies: {
         get(name: string) {
-          return readCookie(name);
+          // readCookie agora é assíncrono; como o SSR do Supabase espera sync,
+          // preferimos usar o cookieStore resolvido diretamente aqui
+          try {
+            return (cookieStore as any)?.get?.(name)?.value;
+          } catch {}
+          return undefined;
         },
         set(name: string, value: string, options: any) {
           // Em Route Handlers e Server Actions, cookies() permite escrita

@@ -6,7 +6,7 @@ import { createSupabaseServerClient } from "../lib/supabaseServerClient";
 
 export default async function ChartData() { 
   try { 
-    const supabase = createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session) {
