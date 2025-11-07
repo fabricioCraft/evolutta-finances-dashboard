@@ -4,10 +4,25 @@ import { getTransactions } from "@/services/api";
 import { processPieChartData } from "@/lib/chartUtils";
 import ExpensesPieChart from "./ExpensesPieChart";
 import TransactionsTable from "./TransactionsTable";
+import { createSupabaseServerClient } from "@/lib/supabaseServerClient";
 
 export default async function DashboardContent() {
   try {
-    const transactions = await getTransactions();
+    // Obter sessão atual do Supabase no servidor para autenticar chamadas ao backend
+    const supabase = await createSupabaseServerClient();
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+      return (
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          <div className="lg:col-span-5 p-6 bg-dark-card border border-dark-border rounded-xl text-center text-gray-400">
+            <p className="text-sm">Faça login para ver o conteúdo do dashboard.</p>
+          </div>
+        </div>
+      );
+    }
+
+    const transactions = await getTransactions(undefined, undefined, session.access_token);
     const pieChartData = processPieChartData(transactions);
 
     return (

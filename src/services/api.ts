@@ -15,6 +15,7 @@ export async function getMonthlySummary(year?: number, month?: number, authToken
   const y = year ?? now.getFullYear();
   const m = month ?? now.getMonth() + 1;
   const url = `${API_BASE_URL}/reports/monthly-summary?year=${y}&month=${m}`;
+  console.log('[API] GET monthly-summary', { url, API_BASE_URL, hasAuthToken: !!authToken });
 
   const res = await fetch(url, {
     method: 'GET',
@@ -32,6 +33,7 @@ export async function getMonthlySummary(year?: number, month?: number, authToken
   }
 
   const data: unknown = await res.json();
+  console.log('[API] monthly-summary response', data);
   return data as SummaryResponse;
 }
 
@@ -41,6 +43,7 @@ export async function getTransactions(startDate?: string, endDate?: string, auth
   if (startDate) params.set('startDate', startDate);
   if (endDate) params.set('endDate', endDate);
   const url = `${API_BASE_URL}/transactions${params.size ? `?${params.toString()}` : ''}`;
+  console.log('[API] GET transactions', { url, API_BASE_URL, hasAuthToken: !!authToken });
 
   const res = await fetch(url, {
     method: 'GET',
@@ -57,5 +60,6 @@ export async function getTransactions(startDate?: string, endDate?: string, auth
   }
 
   const data: unknown = await res.json();
+  console.log('[API] transactions response count', Array.isArray(data) ? data.length : 'N/A');
   return Array.isArray(data) ? (data as any[]) : [];
 }

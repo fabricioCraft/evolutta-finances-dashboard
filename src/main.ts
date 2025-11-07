@@ -1,7 +1,14 @@
+import { config } from 'dotenv';
+// Garantir que valores do .env substituam variáveis de ambiente pré-existentes
+config({ override: true });
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  // Log básico para confirmar SUPABASE_URL efetivo (sem chaves)
+  const effectiveSupabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  console.log('[Boot] SUPABASE_URL =', effectiveSupabaseUrl);
+
   const app = await NestFactory.create(AppModule);
 
   // Enable CORS for cross-origin requests

@@ -1,13 +1,23 @@
 // src/components/TransactionsData.tsx 
 import { getTransactions } from "@/services/api"; 
 import { ArrowUpRight, ArrowDownLeft } from 'lucide-react'; 
+import { createSupabaseServerClient } from "@/lib/supabaseServerClient";
 
 const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' }); 
 const formatCurrency = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value); 
 
 export default async function TransactionsData() { 
   try { 
-    const transactions = await getTransactions(); 
+    const supabase = await createSupabaseServerClient();
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+      return (
+        <p className="text-center text-gray-500 h-full flex items-center justify-center">Faça login para ver suas transações.</p>
+      );
+    }
+
+    const transactions = await getTransactions(undefined, undefined, session.access_token); 
 
     if (transactions.length === 0) { 
       return <p className="text-center text-gray-500 h-full flex items-center justify-center">Nenhuma transação encontrada neste período.</p>; 

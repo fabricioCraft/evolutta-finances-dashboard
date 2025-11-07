@@ -23,7 +23,8 @@ export default async function SummaryData() {
       );
     }
 
-    const summary = await getMonthlySummary(undefined, undefined, session.access_token); 
+    const summary = await getMonthlySummary(undefined, undefined, session.access_token);
+    console.log('[SummaryData] monthly summary', summary);
     return ( 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6"> 
         <StatCard title="Receitas" value={formatCurrency(summary.revenues ?? 0)} icon={<ArrowUpRight size={24} />} colorClass="text-accent-green" /> 
