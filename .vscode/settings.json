@@ -20,5 +20,10 @@
   ],
   "[typescript]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
-  }
+  },
+  // Use tsconfig.frontend.json for Next.js files to get JSX/DOM types
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.renameAcrossFiles": true,
+  // Tailwind CSS v4 uses @import and @apply; silence unknown rules in editor CSS validation
+  "css.lint.unknownAtRules": "ignore"
 }

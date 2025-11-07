@@ -2,9 +2,11 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '../../../../lib/supabaseServerClient';
 
+type LoginBody = { email: string; password: string };
+
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json();
+    const { email, password } = (await req.json()) as Partial<LoginBody>;
     if (!email || !password) {
       return NextResponse.json({ error: 'Email e senha são obrigatórios.' }, { status: 400 });
     }

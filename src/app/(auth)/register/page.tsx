@@ -140,7 +140,7 @@ export default function RegisterPage() {
                   id="email"
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setEmail((e.target as HTMLInputElement).value)}
                   required
                   className="w-full px-4 py-3 mt-1 bg-dark-card border border-dark-border rounded-lg shadow-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-primary transition"
                 />
@@ -153,7 +153,7 @@ export default function RegisterPage() {
                   id="password"
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => setPassword((e.target as HTMLInputElement).value)}
                   required
                   className="w-full px-4 py-3 mt-1 bg-dark-card border border-dark-border rounded-lg shadow-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-primary transition"
                 />
@@ -166,7 +166,7 @@ export default function RegisterPage() {
                   id="confirmPassword"
                   type="password"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => setConfirmPassword((e.target as HTMLInputElement).value)}
                   required
                   className="w-full px-4 py-3 mt-1 bg-dark-card border border-dark-border rounded-lg shadow-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-primary transition"
                 />

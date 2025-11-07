@@ -25,7 +25,7 @@ export default function LoginPage() {
         credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
-      const data = await res.json();
+      const data: { error?: string } = await res.json();
       if (!res.ok) {
         throw new Error(data?.error || 'Falha na autenticação.');
       }
@@ -123,7 +123,7 @@ export default function LoginPage() {
                 id="email" 
                 type="email" 
                 value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
+                onChange={(e) => setEmail((e.target as HTMLInputElement).value)} 
                 required 
                 className="w-full px-4 py-3 mt-1 bg-dark-card border border-dark-border rounded-lg shadow-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-primary transition" 
               /> 
@@ -134,7 +134,7 @@ export default function LoginPage() {
                 id="password" 
                 type="password" 
                 value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
+                onChange={(e) => setPassword((e.target as HTMLInputElement).value)} 
                 required 
                 className="w-full px-4 py-3 mt-1 bg-dark-card border border-dark-border rounded-lg shadow-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-primary transition" 
               /> 

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "isolatedModules": true,
     "declaration": true,
@@ -13,6 +13,9 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -21,7 +24,8 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "lib": [
-      "ES2022"
+      "es2022",
+      "dom"
     ],
     "allowJs": true,
     "strict": false,
@@ -38,16 +42,14 @@
     "supabase/**/*",
     "supabase/functions/**/*",
     "**/supabase/functions/**/*",
-    // Exclude Next.js/React frontend files from NestJS TS project
-    "src/app/**/*",
-    "src/components/**/*",
     // Exclude Tailwind config from TS compiler
-    "tailwind.config.ts",
+    "tailwind.config.js",
     // Exclude public assets
     "public/**/*"
   ],
   "include": [
     "src/**/*.ts",
+    "src/**/*.tsx",
     "scripts/**/*.ts",
     "test/**/*.ts",
     ".next/types/**/*.ts",

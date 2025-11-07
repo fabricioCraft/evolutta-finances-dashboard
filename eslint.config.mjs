@@ -29,7 +29,8 @@ export default tseslint.config(
       sourceType: 'commonjs',
       parserOptions: {
         projectService: true,
-        tsconfigRootDir: import.meta.dirname,
+        // Use process.cwd() to avoid relying on import.meta in this config file
+        tsconfigRootDir: process.cwd(),
       },
     },
   },
