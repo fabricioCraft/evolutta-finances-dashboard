@@ -17,8 +17,14 @@ const SummarySkeleton = () => (
 const ChartSkeleton = () => <div className="h-[350px] bg-dark-card/50 rounded-xl"></div>;
 const TableSkeleton = () => <div className="h-[400px] bg-dark-card/50 rounded-xl"></div>;
 
-export default function DashboardPage({ searchParams }: { searchParams?: Record<string, string | string[] | undefined> }) { 
-  return ( 
+export default async function DashboardPage({
+  searchParams,
+}: {
+  // Next 15: searchParams é Promise e deve ser descompactado com await/use()
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const params = searchParams ? await searchParams : {};
+  return (
     <div className="container mx-auto p-6 md:p-8 space-y-8"> 
       {/* CABEÇALHO DA PÁGINA COM TÍTULO E FILTROS */} 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between"> 
@@ -28,29 +34,35 @@ export default function DashboardPage({ searchParams }: { searchParams?: Record<
 
       {/* CARDS DE RESUMO */} 
       <div> 
-        <Suspense fallback={<SummarySkeleton />}> 
-          <SummaryData 
-            startDate={typeof searchParams?.startDate === 'string' ? searchParams!.startDate : undefined} 
-            endDate={typeof searchParams?.endDate === 'string' ? searchParams!.endDate : undefined} 
-          /> 
-        </Suspense> 
+        <Suspense fallback={<SummarySkeleton />}>
+          <SummaryData
+            startDate={typeof params?.startDate === 'string' ? (params!.startDate as string) : undefined}
+            endDate={typeof params?.endDate === 'string' ? (params!.endDate as string) : undefined}
+          />
+        </Suspense>
       </div> 
 
       {/* CONTEÚDO PRINCIPAL (GRÁFICOS E TABELA) */} 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8"> 
         <div className="lg:col-span-3"> 
           <WidgetContainer title="Despesas por Categoria"> 
-            <Suspense fallback={<ChartSkeleton />}> 
-              <ChartData startDate={typeof searchParams?.startDate === 'string' ? searchParams!.startDate : undefined} endDate={typeof searchParams?.endDate === 'string' ? searchParams!.endDate : undefined} /> 
-            </Suspense> 
+            <Suspense fallback={<ChartSkeleton />}>
+              <ChartData
+                startDate={typeof params?.startDate === 'string' ? (params!.startDate as string) : undefined}
+                endDate={typeof params?.endDate === 'string' ? (params!.endDate as string) : undefined}
+              />
+            </Suspense>
           </WidgetContainer> 
         </div> 
         
         <div className="lg:col-span-2"> 
           <WidgetContainer title="Últimas Transações"> 
-            <Suspense fallback={<TableSkeleton />}> 
-              <TransactionsData startDate={typeof searchParams?.startDate === 'string' ? searchParams!.startDate : undefined} endDate={typeof searchParams?.endDate === 'string' ? searchParams!.endDate : undefined} /> 
-            </Suspense> 
+            <Suspense fallback={<TableSkeleton />}>
+              <TransactionsData
+                startDate={typeof params?.startDate === 'string' ? (params!.startDate as string) : undefined}
+                endDate={typeof params?.endDate === 'string' ? (params!.endDate as string) : undefined}
+              />
+            </Suspense>
           </WidgetContainer> 
         </div> 
       </div> 

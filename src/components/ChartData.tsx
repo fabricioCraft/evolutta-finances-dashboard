@@ -16,8 +16,13 @@ export default async function ChartData({ startDate, endDate }: { startDate?: st
     }
 
     const transactions = await getTransactions(startDate, endDate, session.access_token); 
-    const categories = await getCategories(session.access_token);
-    const categoriesById = Object.fromEntries(categories.map((c: any) => [c.id, c.name]));
+    let categoriesById: Record<string, string> = {};
+    try {
+      const categories = await getCategories(session.access_token);
+      categoriesById = Object.fromEntries(categories.map((c: any) => [c.id, c.name]));
+    } catch (e) {
+      categoriesById = {};
+    }
     const pieChartData = processPieChartData(transactions, categoriesById);
 
     if (pieChartData.length === 0) { 

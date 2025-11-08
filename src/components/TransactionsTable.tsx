@@ -1,6 +1,7 @@
 // src/components/TransactionsTable.tsx
-import { useEffect, useState } from 'react';
-import { getTransactions } from '@/services/api';
+// Renderiza tabela com transações recebidas do servidor (SSR) via props.
+// Remove fetch no client para evitar falhas de autenticação e inconsistências.
+import { useMemo } from 'react';
 
 type Transaction = {
   id?: string;
@@ -10,34 +11,12 @@ type Transaction = {
   category?: string;
 };
 
-export default function TransactionsTable() {
-  const [items, setItems] = useState<Transaction[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    let canceled = false;
-    setLoading(true);
-    getTransactions()
-      .then((res) => {
-        if (!canceled) setItems(Array.isArray(res) ? res : []);
-      })
-      .catch((err) => {
-        if (!canceled) setError(err instanceof Error ? err.message : 'Falha ao carregar transações');
-      })
-      .finally(() => {
-        if (!canceled) setLoading(false);
-      });
-
-    return () => {
-      canceled = true;
-    };
-  }, []);
+export default function TransactionsTable({ transactions = [] as Transaction[] }: { transactions?: Transaction[] }) {
+  const items = useMemo(() => Array.isArray(transactions) ? transactions : [], [transactions]);
 
   return (
     <div className="bg-dark-card border border-dark-border rounded-xl p-4">
       <h3 className="text-lg font-semibold text-white mb-4">Transações</h3>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
       <table className="w-full text-sm text-gray-300">
         <thead>
           <tr className="text-left">
@@ -60,7 +39,7 @@ export default function TransactionsTable() {
               </td>
             </tr>
           ))}
-          {!loading && items.length === 0 && (
+          {items.length === 0 && (
             <tr>
               <td colSpan={4} className="py-4 text-center text-gray-500">
                 Nenhuma transação encontrada
@@ -69,7 +48,6 @@ export default function TransactionsTable() {
           )}
         </tbody>
       </table>
-      {loading && <p className="mt-3 text-sm text-gray-400">Carregando...</p>}
     </div>
   );
 }

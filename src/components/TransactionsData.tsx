@@ -18,8 +18,13 @@ export default async function TransactionsData({ startDate, endDate }: { startDa
     }
 
     const transactions = await getTransactions(startDate, endDate, session.access_token);
-    const categories = await getCategories(session.access_token);
-    const categoriesById = Object.fromEntries(categories.map((c: any) => [c.id, c.name]));
+    let categoriesById: Record<string, string> = {};
+    try {
+      const categories = await getCategories(session.access_token);
+      categoriesById = Object.fromEntries(categories.map((c: any) => [c.id, c.name]));
+    } catch (e) {
+      categoriesById = {};
+    }
 
     if (transactions.length === 0) {
       return <p className="text-center text-gray-500 h-full flex items-center justify-center">Nenhuma transação encontrada neste período.</p>;

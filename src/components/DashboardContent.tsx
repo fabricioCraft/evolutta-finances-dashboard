@@ -26,7 +26,13 @@ export default async function DashboardContent() {
     const transactions = await getTransactions(undefined, undefined, session.access_token);
     const categories = await getCategories(session.access_token);
     const categoriesById = Object.fromEntries(categories.map((c: any) => [c.id, c.name]));
-    const pieChartData = processPieChartData(transactions, categoriesById);
+    const transactionsEnriched = Array.isArray(transactions)
+      ? transactions.map((t: any) => ({
+          ...t,
+          category: t?.category ?? (t?.categoryId ? categoriesById[t.categoryId] : undefined),
+        }))
+      : [];
+    const pieChartData = processPieChartData(transactionsEnriched, categoriesById);
 
     return (
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
@@ -41,7 +47,7 @@ export default async function DashboardContent() {
           </div>
         </div>
         <div className="lg:col-span-2">
-          <TransactionsTable transactions={transactions.slice(0, 10)} />
+          <TransactionsTable transactions={transactionsEnriched.slice(0, 10)} />
           <p className="text-center mt-4 text-sm text-gray-500">Exibindo as 10 transações mais recentes.</p>
         </div>
       </div>

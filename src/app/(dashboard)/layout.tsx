@@ -1,22 +1,22 @@
 // src/app/(dashboard)/layout.tsx
 import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '../../lib/supabaseServerClient';
-import Header from '../../components/Header';
+import { createSupabaseServerClient } from '@/lib/supabaseServerClient';
+import Sidebar from '@/components/Sidebar';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createSupabaseServerClient();
   const { data: { session } } = await supabase.auth.getSession();
-
-  // Se NÃO houver sessão, redireciona para o login
   if (!session) {
     redirect('/login');
   }
 
-  // Se houver sessão, renderiza o layout e a página
   return (
-    <div className="min-h-screen bg-dark-bg">
-      <Header />
-      <main>{children}</main>
+    <div className="flex h-screen bg-dark-bg">
+      <Sidebar />
+      <main className="flex-1 overflow-y-auto">
+        {/* O Header pode ser movido para cá se quisermos um header por página */}
+        {children}
+      </main>
     </div>
   );
 }

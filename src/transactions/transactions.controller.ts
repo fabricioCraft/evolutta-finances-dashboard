@@ -71,6 +71,7 @@ export class TransactionsController {
   async findAll(
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
+    @Query('ignoreDate') ignoreDate: string,
     @GetUser() user: User,
   ) {
     // Imprimir o ID do usuário no console para confirmar que funciona
@@ -79,21 +80,41 @@ export class TransactionsController {
     // Converter strings de data para objetos Date, aplicando defaults para mês atual quando ausentes/invalidos
     const now = new Date();
     const defaultStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    defaultStart.setHours(0, 0, 0, 0);
     const defaultEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    defaultEnd.setHours(23, 59, 59, 999);
 
     const parsedStart = new Date(startDate as any);
     const parsedEnd = new Date(endDate as any);
 
     const startDateObj = isNaN(parsedStart.getTime())
       ? defaultStart
-      : parsedStart;
-    const endDateObj = isNaN(parsedEnd.getTime()) ? defaultEnd : parsedEnd;
+      : new Date(parsedStart.setHours(0, 0, 0, 0));
+    const endDateObj = isNaN(parsedEnd.getTime())
+      ? defaultEnd
+      : new Date(parsedEnd.setHours(23, 59, 59, 999));
+
+    // Fallback de diagnóstico: ignorar filtro de data quando explicitamente solicitado
+    if (ignoreDate === 'true') {
+      console.warn('[TransactionsController] Ignorando filtro de data por ignoreDate=true');
+      return await this.transactionsService.findAll(user.id);
+    }
 
     // Chamar o serviço com o userId e as datas convertidas
-    return await this.transactionsService.findAllByDateRange(
+    const results = await this.transactionsService.findAllByDateRange(
       user.id,
       startDateObj,
       endDateObj,
     );
+
+    // Diagnóstico adicional: se não houver resultados e nenhum intervalo explícito foi enviado,
+    // retornar todas as transações do usuário para confirmar conexão/dados.
+    const hasExplicitRange = Boolean(startDate) || Boolean(endDate);
+    if (!hasExplicitRange && results.length === 0) {
+      console.warn('[TransactionsController] Nenhum resultado no período padrão; retornando todas as transações para diagnóstico');
+      return await this.transactionsService.findAll(user.id);
+    }
+
+    return results;
   }
 }

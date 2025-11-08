@@ -29,6 +29,7 @@ export async function getMonthlySummary(year?: number, month?: number, authToken
   });
 
   if (!res.ok) {
+    console.error('[API] monthly-summary error', { status: res.status, statusText: res.statusText });
     throw new Error(`Falha ao buscar resumo: ${res.status}`);
   }
 
@@ -80,6 +81,7 @@ export async function getTransactions(startDate?: string, endDate?: string, auth
   });
 
   if (!res.ok) {
+    console.error('[API] transactions error', { status: res.status, statusText: res.statusText });
     throw new Error(`Falha ao buscar transações: ${res.status}`);
   }
 

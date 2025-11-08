@@ -22,4 +22,8 @@ export class TransactionsService {
       endDate,
     );
   }
+
+  async findAll(userId: string) {
+    return this.transactionsRepository.findAll(userId);
+  }
 }

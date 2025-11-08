@@ -21,6 +21,8 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
+        {/* Script do Widget Belvo (versão estável) */}
+        <script src="https://cdn.belvo.io/belvo-widget-1-stable.js" async></script>
       </head>
       <body className={`${inter.className} bg-dark-bg text-gray-300`}>
         {children}
