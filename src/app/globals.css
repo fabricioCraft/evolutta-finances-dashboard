@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+/* Adicione ao final de globals.css */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.3), transparent),
+    radial-gradient(ellipse 80% 50% at 50% 120%, rgba(16, 185, 129, 0.2), transparent);
+  z-index: -1;
+  opacity: 0.5;
+}
+
+
 /* Tailwind v4: defina o tema via @theme para habilitar cores e fontes customizadas */
 @theme {
   --font-sans: 'Poppins', sans-serif;
@@ -22,7 +38,7 @@ body {
 
 /* Ajustes finos para inputs e botões em tema escuro */
 input, button {
-  @apply outline-none;
+  @apply outline-none cursor-pointer;
 }
 
 /* Links de ação */

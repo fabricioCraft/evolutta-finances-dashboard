@@ -7,15 +7,15 @@ import TransactionsData from '@/components/TransactionsData';
 import DashboardFilters from '@/components/DashboardFilters'; 
 
 const SummarySkeleton = () => (
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div className="h-28 bg-dark-card rounded-xl"></div>
     <div className="h-28 bg-dark-card rounded-xl"></div>
     <div className="h-28 bg-dark-card rounded-xl"></div>
   </div>
 );
 
-const ChartSkeleton = () => <div className="h-[350px] bg-dark-card/50 rounded-xl animate-pulse"></div>;
-const TableSkeleton = () => <div className="h-[400px] bg-dark-card/50 rounded-xl animate-pulse"></div>;
+const ChartSkeleton = () => <div className="h-[350px] bg-dark-card/50 rounded-xl"></div>;
+const TableSkeleton = () => <div className="h-[400px] bg-dark-card/50 rounded-xl"></div>;
 
 export default function DashboardPage({ searchParams }: { searchParams?: Record<string, string | string[] | undefined> }) { 
   return ( 
@@ -29,7 +29,10 @@ export default function DashboardPage({ searchParams }: { searchParams?: Record<
       {/* CARDS DE RESUMO */} 
       <div> 
         <Suspense fallback={<SummarySkeleton />}> 
-          <SummaryData endDate={typeof searchParams?.endDate === 'string' ? searchParams!.endDate : undefined} /> 
+          <SummaryData 
+            startDate={typeof searchParams?.startDate === 'string' ? searchParams!.startDate : undefined} 
+            endDate={typeof searchParams?.endDate === 'string' ? searchParams!.endDate : undefined} 
+          /> 
         </Suspense> 
       </div> 
 
