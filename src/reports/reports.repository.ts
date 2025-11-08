@@ -39,13 +39,13 @@ export class PrismaReportsRepository implements IReportsRepository {
       const balance = revenues - expenses;
 
       return { revenues, expenses, balance };
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error('[ReportsRepository] Falha ao calcular resumo por período (Supabase)', {
+    } catch (error: any) {
+      console.error('[ReportsRepository] Falha ao calcular resumo por período (Supabase) - Detalhes:', {
         userId,
         startDate,
         endDate,
-        error: message,
+        message: error?.message || String(error),
+        stack: error?.stack,
       });
       return { revenues: 0, expenses: 0, balance: 0 };
     }

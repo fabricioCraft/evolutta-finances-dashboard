@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabaseServerClient';
 
+// Base URL do backend NestJS (fallback padrão porta 4000)
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000';
+
 export async function GET(req: Request) {
   try {
     const authHeader = req.headers.get('authorization') || undefined;
@@ -18,7 +21,7 @@ export async function GET(req: Request) {
     }
 
     // Chama o backend NestJS para gerar o token do widget
-    const res = await fetch('http://localhost:4000/connections/connect-token', {
+    const res = await fetch(`${API_BASE_URL}/connections/connect-token`, {
       method: 'POST',
       headers: {
         Authorization: authHeader || `Bearer ${accessToken}`,

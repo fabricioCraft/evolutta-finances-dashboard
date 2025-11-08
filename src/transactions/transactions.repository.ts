@@ -36,11 +36,11 @@ export class PrismaTransactionsRepository implements ITransactionsRepository {
 
       if (error) throw error;
       return data ?? null;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error('[TransactionsRepository] Falha ao buscar transação por ID (Supabase)', {
+    } catch (error: any) {
+      console.error('[TransactionsRepository] Falha ao buscar transação por ID (Supabase) - Detalhes:', {
         id,
-        error: message,
+        message: error?.message || String(error),
+        stack: error?.stack,
       });
       return null;
     }
@@ -63,12 +63,12 @@ export class PrismaTransactionsRepository implements ITransactionsRepository {
 
       if (error) throw error;
       return data;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error('[TransactionsRepository] Falha ao atualizar categoria (Supabase)', {
+    } catch (error: any) {
+      console.error('[TransactionsRepository] Falha ao atualizar categoria (Supabase) - Detalhes:', {
         id,
         categoryId,
-        error: message,
+        message: error?.message || String(error),
+        stack: error?.stack,
       });
       return null;
     }
@@ -93,13 +93,13 @@ export class PrismaTransactionsRepository implements ITransactionsRepository {
 
       if (error) throw error;
       return Array.isArray(data) ? (data as any[]) : [];
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error('[TransactionsRepository] Falha ao buscar transações por período (Supabase)', {
+    } catch (error: any) {
+      console.error('[TransactionsRepository] Falha ao buscar transações por período (Supabase) - Detalhes:', {
         userId,
         startDate,
         endDate,
-        error: message,
+        message: error?.message || String(error),
+        stack: error?.stack,
       });
       return [];
     }
@@ -115,11 +115,11 @@ export class PrismaTransactionsRepository implements ITransactionsRepository {
 
       if (error) throw error;
       return Array.isArray(data) ? (data as any[]) : [];
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error('[TransactionsRepository] Falha ao buscar todas transações por usuário (Supabase)', {
+    } catch (error: any) {
+      console.error('[TransactionsRepository] Falha ao buscar todas transações por usuário (Supabase) - Detalhes:', {
         userId,
-        error: message,
+        message: error?.message || String(error),
+        stack: error?.stack,
       });
       return [];
     }

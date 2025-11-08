@@ -42,14 +42,14 @@ export class PrismaCategoriesRepository implements ICategoriesRepository {
 
       if (error) throw error;
       return data as Category;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error('[CategoriesRepository] Falha ao criar categoria (Supabase)', {
+    } catch (error: any) {
+      console.error('[CategoriesRepository] Falha ao criar categoria (Supabase) - Detalhes:', {
         userId,
         createCategoryDto,
-        error: message,
+        message: error?.message || String(error),
+        stack: error?.stack,
       });
-      throw err;
+      throw error;
     }
   }
 
@@ -63,11 +63,11 @@ export class PrismaCategoriesRepository implements ICategoriesRepository {
 
       if (error) throw error;
       return (data as Category[]) ?? [];
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error('[CategoriesRepository] Falha ao listar categorias (Supabase)', {
+    } catch (error: any) {
+      console.error('[CategoriesRepository] Falha ao listar categorias (Supabase) - Detalhes:', {
         userId,
-        error: message,
+        message: error?.message || String(error),
+        stack: error?.stack,
       });
       return [];
     }
@@ -83,11 +83,11 @@ export class PrismaCategoriesRepository implements ICategoriesRepository {
 
       if (error) throw error;
       return (data as Category) ?? null;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error('[CategoriesRepository] Falha ao buscar categoria por ID (Supabase)', {
+    } catch (error: any) {
+      console.error('[CategoriesRepository] Falha ao buscar categoria por ID (Supabase) - Detalhes:', {
         id,
-        error: message,
+        message: error?.message || String(error),
+        stack: error?.stack,
       });
       return null;
     }
@@ -104,14 +104,14 @@ export class PrismaCategoriesRepository implements ICategoriesRepository {
 
       if (error) throw error;
       return updated as Category;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error('[CategoriesRepository] Falha ao atualizar categoria (Supabase)', {
+    } catch (error: any) {
+      console.error('[CategoriesRepository] Falha ao atualizar categoria (Supabase) - Detalhes:', {
         id,
         data,
-        error: message,
+        message: error?.message || String(error),
+        stack: error?.stack,
       });
-      throw err;
+      throw error;
     }
   }
 
@@ -126,13 +126,13 @@ export class PrismaCategoriesRepository implements ICategoriesRepository {
 
       if (error) throw error;
       return data as Category;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error('[CategoriesRepository] Falha ao remover categoria (Supabase)', {
+    } catch (error: any) {
+      console.error('[CategoriesRepository] Falha ao remover categoria (Supabase) - Detalhes:', {
         id,
-        error: message,
+        message: error?.message || String(error),
+        stack: error?.stack,
       });
-      throw err;
+      throw error;
     }
   }
 }

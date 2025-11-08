@@ -13,16 +13,15 @@ export const supabaseProvider = {
         ? envUrl
         : nextPublicUrl || envUrl;
 
-    // Permitir fallback para NEXT_PUBLIC_* quando necessário
-    const supabaseKey =
-      process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    // Usar exclusivamente a chave de serviço do backend
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (!supabaseUrl || !supabaseKey) {
+    if (!supabaseUrl || !supabaseServiceKey) {
       throw new Error(
-        'SUPABASE_URL and SUPABASE_ANON_KEY environment variables are required',
+        'SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY são variáveis de ambiente obrigatórias.',
       );
     }
 
-    return createClient(supabaseUrl, supabaseKey);
+    return createClient(supabaseUrl, supabaseServiceKey);
   },
 };

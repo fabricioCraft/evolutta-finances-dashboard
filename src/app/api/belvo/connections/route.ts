@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabaseServerClient';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000';
+
 export async function POST(request: NextRequest) {
   try {
     const authHeader = request.headers.get('authorization') || undefined;
@@ -19,7 +21,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    const res = await fetch('http://localhost:4000/connections/connections', {
+    const res = await fetch(`${API_BASE_URL}/connections/connections`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,4 +1,4 @@
-import { Injectable, Inject, Logger } from '@nestjs/common';
+import { Injectable, Inject, Logger, ServiceUnavailableException } from '@nestjs/common';
 import { Client as BelvoClient } from 'belvo';
 import { BELVO_CLIENT } from '../belvo/belvo.provider';
 import { PrismaService } from '../prisma.service';
@@ -13,12 +13,27 @@ export class ConnectionsService {
   ) {}
 
   async getConnectToken(userId: string): Promise<string> {
+    // Verificar se credenciais da Belvo estão configuradas
+    const secretId = process.env.BELVO_SECRET_ID;
+    const secretPassword = process.env.BELVO_SECRET_PASSWORD;
+    const apiUrl = process.env.BELVO_API_URL;
+    if (!secretId || !secretPassword || !apiUrl) {
+      this.logger.error('Belvo credentials not configured. Set BELVO_SECRET_ID, BELVO_SECRET_PASSWORD and BELVO_API_URL.');
+      throw new ServiceUnavailableException('Belvo credentials missing. Configure BELVO_SECRET_ID/BELVO_SECRET_PASSWORD.');
+    }
+
     // Garantir autenticação antes de solicitar o token do widget
     if ((this.belvo as any).connect) {
       await (this.belvo as any).connect();
     }
-    const response = await (this.belvo as any).widgetToken.create();
-    return response.access;
+    try {
+      const response = await (this.belvo as any).widgetToken.create();
+      return response.access;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      this.logger.error(`Failed to create Belvo widget token for user ${userId}: ${message}`);
+      throw new ServiceUnavailableException('Failed to obtain Belvo widget token. Check Belvo credentials and connectivity.');
+    }
   }
 
   async saveConnection(userId: string, linkId: string, institution: string) {

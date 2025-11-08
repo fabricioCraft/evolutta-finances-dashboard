@@ -8,6 +8,8 @@ async function bootstrap() {
   // Log básico para confirmar SUPABASE_URL efetivo (sem chaves)
   const effectiveSupabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   console.log('[Boot] SUPABASE_URL =', effectiveSupabaseUrl);
+  const supabaseServiceRoleKeyPresent = !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+  console.log('[Boot] SUPABASE_SERVICE_ROLE_KEY presente?', supabaseServiceRoleKeyPresent ? 'SIM' : 'NÃO');
 
   const app = await NestFactory.create(AppModule);
 
