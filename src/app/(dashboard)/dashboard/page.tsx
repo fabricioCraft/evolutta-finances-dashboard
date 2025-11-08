@@ -17,7 +17,7 @@ const SummarySkeleton = () => (
 const ChartSkeleton = () => <div className="h-[350px] bg-dark-card/50 rounded-xl animate-pulse"></div>;
 const TableSkeleton = () => <div className="h-[400px] bg-dark-card/50 rounded-xl animate-pulse"></div>;
 
-export default function DashboardPage() { 
+export default function DashboardPage({ searchParams }: { searchParams?: Record<string, string | string[] | undefined> }) { 
   return ( 
     <div className="container mx-auto p-6 md:p-8 space-y-8"> 
       {/* CABEÇALHO DA PÁGINA COM TÍTULO E FILTROS */} 
@@ -29,7 +29,7 @@ export default function DashboardPage() {
       {/* CARDS DE RESUMO */} 
       <div> 
         <Suspense fallback={<SummarySkeleton />}> 
-          <SummaryData /> 
+          <SummaryData endDate={typeof searchParams?.endDate === 'string' ? searchParams!.endDate : undefined} /> 
         </Suspense> 
       </div> 
 
@@ -38,7 +38,7 @@ export default function DashboardPage() {
         <div className="lg:col-span-3"> 
           <WidgetContainer title="Despesas por Categoria"> 
             <Suspense fallback={<ChartSkeleton />}> 
-              <ChartData /> 
+              <ChartData startDate={typeof searchParams?.startDate === 'string' ? searchParams!.startDate : undefined} endDate={typeof searchParams?.endDate === 'string' ? searchParams!.endDate : undefined} /> 
             </Suspense> 
           </WidgetContainer> 
         </div> 
@@ -46,7 +46,7 @@ export default function DashboardPage() {
         <div className="lg:col-span-2"> 
           <WidgetContainer title="Últimas Transações"> 
             <Suspense fallback={<TableSkeleton />}> 
-              <TransactionsData /> 
+              <TransactionsData startDate={typeof searchParams?.startDate === 'string' ? searchParams!.startDate : undefined} endDate={typeof searchParams?.endDate === 'string' ? searchParams!.endDate : undefined} /> 
             </Suspense> 
           </WidgetContainer> 
         </div> 

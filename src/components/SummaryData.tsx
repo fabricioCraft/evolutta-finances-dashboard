@@ -6,7 +6,7 @@ import { createSupabaseServerClient } from "../lib/supabaseServerClient";
 
 const formatCurrency = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value); 
 
-export default async function SummaryData() { 
+export default async function SummaryData({ endDate }: { endDate?: string }) { 
   try { 
     // Obter sessão atual do Supabase no servidor
     const supabase = await createSupabaseServerClient();
@@ -23,7 +23,16 @@ export default async function SummaryData() {
       );
     }
 
-    const summary = await getMonthlySummary(undefined, undefined, session.access_token);
+    let year: number | undefined = undefined;
+    let month: number | undefined = undefined;
+    if (endDate) {
+      const d = new Date(endDate as any);
+      if (!isNaN(d.getTime())) {
+        year = d.getFullYear();
+        month = d.getMonth() + 1;
+      }
+    }
+    const summary = await getMonthlySummary(year, month, session.access_token);
     console.log('[SummaryData] monthly summary', summary);
     return ( 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6"> 

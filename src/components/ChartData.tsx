@@ -4,7 +4,7 @@ import { processPieChartData } from "../lib/chartUtils";
 import ExpensesPieChart from "./ExpensesPieChart"; 
 import { createSupabaseServerClient } from "../lib/supabaseServerClient";
 
-export default async function ChartData() { 
+export default async function ChartData({ startDate, endDate }: { startDate?: string; endDate?: string }) { 
   try { 
     const supabase = await createSupabaseServerClient();
     const { data: { session } } = await supabase.auth.getSession();
@@ -15,7 +15,7 @@ export default async function ChartData() {
       );
     }
 
-    const transactions = await getTransactions(undefined, undefined, session.access_token); 
+    const transactions = await getTransactions(startDate, endDate, session.access_token); 
     const categories = await getCategories(session.access_token);
     const categoriesById = Object.fromEntries(categories.map((c: any) => [c.id, c.name]));
     const pieChartData = processPieChartData(transactions, categoriesById);

@@ -6,7 +6,7 @@ import { createSupabaseServerClient } from "@/lib/supabaseServerClient";
 const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
 const formatCurrency = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 
-export default async function TransactionsData() {
+export default async function TransactionsData({ startDate, endDate }: { startDate?: string; endDate?: string }) {
   try {
     const supabase = await createSupabaseServerClient();
     const { data: { session } } = await supabase.auth.getSession();
@@ -17,7 +17,7 @@ export default async function TransactionsData() {
       );
     }
 
-    const transactions = await getTransactions(undefined, undefined, session.access_token);
+    const transactions = await getTransactions(startDate, endDate, session.access_token);
     const categories = await getCategories(session.access_token);
     const categoriesById = Object.fromEntries(categories.map((c: any) => [c.id, c.name]));
 
