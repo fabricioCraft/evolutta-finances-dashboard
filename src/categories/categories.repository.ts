@@ -4,7 +4,7 @@ import { PrismaService } from '../prisma.service';
 export interface Category {
   id: string;
   name: string;
-  userId: string;
+  userId: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

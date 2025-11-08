@@ -1,12 +1,12 @@
 // src/components/SummaryData.tsx 
-import { getMonthlySummary } from "../services/api"; 
+import { getMonthlySummary, getTransactions } from "../services/api"; 
 import StatCard from "./StatCard"; 
 import { ArrowUpRight, ArrowDownLeft, Scale } from 'lucide-react'; 
 import { createSupabaseServerClient } from "../lib/supabaseServerClient";
 
 const formatCurrency = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value); 
 
-export default async function SummaryData({ endDate }: { endDate?: string }) { 
+export default async function SummaryData({ startDate, endDate }: { startDate?: string; endDate?: string }) { 
   try { 
     // Obter sessão atual do Supabase no servidor
     const supabase = await createSupabaseServerClient();
@@ -23,18 +23,26 @@ export default async function SummaryData({ endDate }: { endDate?: string }) {
       );
     }
 
-    let year: number | undefined = undefined;
-    let month: number | undefined = undefined;
-    if (endDate) {
-      const d = new Date(endDate as any);
-      if (!isNaN(d.getTime())) {
-        year = d.getFullYear();
-        month = d.getMonth() + 1;
-      }
+    // Se houver intervalo selecionado, calcular o resumo estritamente dentro do período usando transações
+    if (startDate || endDate) {
+      const txs = await getTransactions(startDate, endDate, session.access_token);
+      const revenues = txs.reduce((sum: number, t: any) => sum + (t.amount > 0 ? t.amount : 0), 0);
+      const expenses = txs.reduce((sum: number, t: any) => sum + (t.amount < 0 ? Math.abs(t.amount) : 0), 0);
+      const balance = revenues - expenses;
+      console.log('[SummaryData] range summary', { count: txs.length, revenues, expenses, balance, startDate, endDate });
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6"> 
+          <StatCard title="Receitas" value={formatCurrency(revenues)} icon={<ArrowUpRight size={24} />} colorClass="text-accent-green" /> 
+          <StatCard title="Despesas" value={formatCurrency(expenses)} icon={<ArrowDownLeft size={24} />} colorClass="text-accent-red" /> 
+          <StatCard title="Saldo" value={formatCurrency(balance)} icon={<Scale size={24} />} colorClass="text-accent-blue" /> 
+        </div>
+      );
     }
-    const summary = await getMonthlySummary(year, month, session.access_token);
+
+    // Caso não haja intervalo, manter o resumo mensal padrão (mês atual)
+    const summary = await getMonthlySummary(undefined, undefined, session.access_token);
     console.log('[SummaryData] monthly summary', summary);
-    return ( 
+    return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6"> 
         <StatCard title="Receitas" value={formatCurrency(summary.revenues ?? 0)} icon={<ArrowUpRight size={24} />} colorClass="text-accent-green" /> 
         <StatCard title="Despesas" value={formatCurrency(summary.expenses ?? 0)} icon={<ArrowDownLeft size={24} />} colorClass="text-accent-red" /> 

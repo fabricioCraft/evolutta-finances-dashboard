@@ -18,6 +18,7 @@ interface RawTransaction {
   raw_payload: any
   created_at: string
   status: string
+  user_id: string
 }
 
 interface CategorizationRule {
@@ -227,7 +228,7 @@ async function processTransaction(supabase: any, rawTransaction: RawTransaction)
       date: rawTransaction.transaction_date,
       createdAt: now,
       updatedAt: now,
-      userId: 'test-user-placeholder' // Valor fixo para testes
+      userId: rawTransaction.user_id // Usa o user_id da RawTransaction
     }
 
     console.log('💾 Dados da transação processada:', JSON.stringify(processedTransaction, null, 2))

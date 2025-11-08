@@ -24,26 +24,26 @@ model Category {
   name               String
   createdAt          DateTime             @default(now())
   updatedAt          DateTime
-  userId             String
+  userId             String?              @db.Uuid
   CategorizationRule CategorizationRule[]
-  User               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User               User?                @relation(fields: [userId], references: [id], onDelete: Cascade)
   Transaction        Transaction[]
-
-  @@unique([name, userId])
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model RawTransactions {
-  belvo_id         String   @unique
+  belvo_id         String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   amount           Decimal  @db.Decimal
   raw_description  String?
   transaction_date DateTime @db.Timestamptz(6)
   type             String
-  account_id       String?
+  accountId        String?  @map("account_id")
   raw_payload      Json
   created_at       DateTime @default(now()) @db.Timestamptz(6)
   status           String   @default("PENDING")
-  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id               String   @id
+  user_id          String?  @db.Uuid
+  account          Account? @relation(fields: [accountId], references: [id])
 }
 
 model Transaction {
@@ -54,16 +54,57 @@ model Transaction {
   date               DateTime @default(now())
   createdAt          DateTime @default(now())
   updatedAt          DateTime
-  userId             String
   cleanedDescription String?
+  userId             String?  @db.Uuid
   Category           Category @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  User               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User               User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountId          String?  @map("account_id")
+  account            Account? @relation(fields: [accountId], references: [id])
 }
 
 model User {
-  id          String        @id
   createdAt   DateTime      @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime      @updatedAt
+  id          String        @id @db.Uuid
+  email       String?       @unique
   Category    Category[]
   Transaction Transaction[]
+  belvoLinks  BelvoLink[]
+
+  @@map("User")
+}
+
+model BelvoLink {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  belvoLinkId String   @unique @map("belvo_link_id")
+  institution String
+  accessMode  String   @map("access_mode")
+  status      String   @default("valid")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accounts    Account[]
+
+  @@map("belvo_links")
+}
+
+model Account {
+  id              String        @id @default(cuid())
+  belvoAccountId  String        @unique @map("belvo_account_id")
+  name            String
+  type            String
+  balance         Float
+  currency        String
+
+  belvoLinkId     String        @map("belvo_link_id") @db.Uuid
+  belvoLink       BelvoLink     @relation(fields: [belvoLinkId], references: [id], onDelete: Cascade)
+
+  transactions    Transaction[]
+  rawTransactions RawTransactions[]
+
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  @@map("accounts")
 }
