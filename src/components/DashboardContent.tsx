@@ -5,6 +5,7 @@ import { processPieChartData } from "@/lib/chartUtils";
 import ExpensesPieChart from "./ExpensesPieChart";
 import TransactionsTable from "./TransactionsTable";
 import { createSupabaseServerClient } from "@/lib/supabaseServerClient";
+import { getCategories } from "@/services/api";
 
 export default async function DashboardContent() {
   try {
@@ -23,7 +24,9 @@ export default async function DashboardContent() {
     }
 
     const transactions = await getTransactions(undefined, undefined, session.access_token);
-    const pieChartData = processPieChartData(transactions);
+    const categories = await getCategories(session.access_token);
+    const categoriesById = Object.fromEntries(categories.map((c: any) => [c.id, c.name]));
+    const pieChartData = processPieChartData(transactions, categoriesById);
 
     return (
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
@@ -31,7 +34,7 @@ export default async function DashboardContent() {
           <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Despesas por Categoria</h3>
             {pieChartData.length > 0 ? (
-              <ExpensesPieChart data={pieChartData} />
+              <ExpensesPieChart data={pieChartData.map((d) => ({ name: d.label, value: d.value }))} />
             ) : (
               <p className="text-center text-gray-500 py-16">Não há dados de despesas para exibir o gráfico.</p>
             )}

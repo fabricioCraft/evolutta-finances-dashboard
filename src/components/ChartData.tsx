@@ -1,5 +1,5 @@
 // src/components/ChartData.tsx 
-import { getTransactions } from "../services/api"; 
+import { getTransactions, getCategories } from "../services/api"; 
 import { processPieChartData } from "../lib/chartUtils"; 
 import ExpensesPieChart from "./ExpensesPieChart"; 
 import { createSupabaseServerClient } from "../lib/supabaseServerClient";
@@ -16,13 +16,16 @@ export default async function ChartData() {
     }
 
     const transactions = await getTransactions(undefined, undefined, session.access_token); 
-    const pieChartData = processPieChartData(transactions); 
+    const categories = await getCategories(session.access_token);
+    const categoriesById = Object.fromEntries(categories.map((c: any) => [c.id, c.name]));
+    const pieChartData = processPieChartData(transactions, categoriesById);
 
     if (pieChartData.length === 0) { 
       return <p className="text-center text-gray-500 h-full flex items-center justify-center">Não há dados de despesas para exibir o gráfico.</p>; 
     } 
     
-    return <ExpensesPieChart data={pieChartData} />; 
+    const chartData = pieChartData.map((d) => ({ name: d.label, value: d.value }));
+    return <ExpensesPieChart data={chartData} />;
   } catch (error: any) { 
     return ( 
       <div className="text-center text-red-400 h-full flex items-center justify-center"> 

@@ -37,6 +37,30 @@ export async function getMonthlySummary(year?: number, month?: number, authToken
   return data as SummaryResponse;
 }
 
+// Lista categorias do usuário autenticado
+export async function getCategories(authToken?: string): Promise<Array<{ id: string; name: string }>> {
+  const url = `${API_BASE_URL}/categories`;
+  console.log('[API] GET categories', { url, API_BASE_URL, hasAuthToken: !!authToken });
+
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      ...(!authToken && process.env.NEXT_PUBLIC_AUTH_TOKEN ? { Authorization: `Bearer ${process.env.NEXT_PUBLIC_AUTH_TOKEN}` } : {}),
+    },
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    throw new Error(`Falha ao buscar categorias: ${res.status}`);
+  }
+
+  const data: unknown = await res.json();
+  console.log('[API] categories response count', Array.isArray(data) ? data.length : 'N/A');
+  return Array.isArray(data) ? (data as any[]) : [];
+}
+
 // Permite injetar token de autorização explicitamente
 export async function getTransactions(startDate?: string, endDate?: string, authToken?: string): Promise<any[]> {
   const params = new URLSearchParams();

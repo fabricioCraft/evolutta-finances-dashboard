@@ -58,6 +58,14 @@ export class PrismaTransactionsRepository implements ITransactionsRepository {
       orderBy: {
         date: 'desc', // ordenar por data decrescente
       },
+      include: {
+        Category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
   }
 }

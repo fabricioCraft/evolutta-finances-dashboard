@@ -52,7 +52,7 @@ export default function TransactionsTable() {
             <tr key={t.id ?? idx} className="border-t border-dark-border">
               <td className="py-2">{t.date ?? '-'}</td>
               <td className="py-2">{t.description ?? '-'}</td>
-              <td className="py-2">{t.category ?? '-'}</td>
+              <td className="py-2">{(t as any).Category?.name ?? (t as any).category ?? '-'}</td>
               <td className="py-2 text-right">
                 {typeof t.amount === 'number'
                   ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(t.amount)
