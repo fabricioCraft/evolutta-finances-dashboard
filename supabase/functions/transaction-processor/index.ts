@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Edge Function: transaction-processor
 // Processa transações da tabela RawTransactions, aplica limpeza e categorização,
 // e insere na tabela Transaction com ID gerado automaticamente usando CUID2
@@ -49,6 +50,8 @@ interface ProcessedTransaction {
   userId: string
 }
 
+// Este arquivo é uma Edge Function (Deno). O TypeScript do workspace Node/Next
+// não deve tipar este módulo; a checagem é desativada para evitar falsos positivos.
 // Configuração do ambiente
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!

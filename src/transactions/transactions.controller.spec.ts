@@ -107,6 +107,7 @@ describe('TransactionsController', () => {
     const result = await controller.findAll(
       startDateString,
       endDateString,
+      'false',
       mockUser,
     );
 

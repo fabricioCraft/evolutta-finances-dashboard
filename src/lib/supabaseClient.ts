@@ -1,5 +1,8 @@
 // src/lib/supabaseClient.ts
-import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs';
+import { createBrowserClient } from '@supabase/ssr';
 
-// Este é um cliente que só deve ser usado em Componentes de Cliente ('use client')
-export const supabase = createPagesBrowserClient();
+// Cliente Supabase para uso em componentes Client no App Router
+export const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);

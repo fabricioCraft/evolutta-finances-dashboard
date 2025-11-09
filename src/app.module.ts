@@ -9,6 +9,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { AuthModule } from './auth/auth.module';
 import { ConnectionsModule } from './connections/connections.module';
 import { ReportsModule } from './reports/reports.module';
+import { BelvoModule } from './belvo/belvo.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ReportsModule } from './reports/reports.module';
     AuthModule,
     ConnectionsModule,
     ReportsModule,
+    BelvoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

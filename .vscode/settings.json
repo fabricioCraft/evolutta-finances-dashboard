@@ -19,7 +19,7 @@
     "net"
   ],
   "[typescript]": {
-    "editor.defaultFormatter": "denoland.vscode-deno"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   // Use tsconfig.frontend.json for Next.js files to get JSX/DOM types
   "typescript.tsdk": "node_modules/typescript/lib",

@@ -30,24 +30,36 @@ export default async function TransactionsData({ startDate, endDate }: { startDa
       return <p className="text-center text-gray-500 h-full flex items-center justify-center">Nenhuma transação encontrada neste período.</p>;
     }
 
-    return (
+  return (
       <div className="overflow-y-auto max-h-[400px] pr-2">
         <ul className="space-y-2">
           {transactions.map((t: any) => (
             <li key={t.id} className="flex items-center justify-between p-3 rounded-lg transition-colors hover:bg-white/5">
               <div className="flex items-center">
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full mr-3 ${t.type === 'REVENUE' ? 'bg-green-900/50 text-accent-green' : 'bg-red-900/50 text-accent-red'}`}>
-                  {t.type === 'REVENUE' ? <ArrowUpRight size={18} /> : <ArrowDownLeft size={18} />}
-                </div>
+                {(() => {
+                  const amount = typeof t.amount === 'number' ? t.amount : (typeof t.value === 'number' ? t.value : 0);
+                  const isIncome = amount >= 0;
+                  return (
+                    <div className={`flex items-center justify-center w-10 h-10 rounded-full mr-3 ${isIncome ? 'bg-green-900/50 text-accent-green' : 'bg-red-900/50 text-accent-red'}`}>
+                      {isIncome ? <ArrowUpRight size={18} /> : <ArrowDownLeft size={18} />}
+                    </div>
+                  );
+                })()}
                 <div>
                   <p className="font-semibold text-white text-sm">{t.cleanedDescription ?? t.description}</p>
                   <p className="text-xs text-gray-400">{t.Category?.name ?? categoriesById[t.categoryId] ?? t.category?.name ?? 'Sem Categoria'}</p> 
                 </div>
               </div>
               <div className="text-right">
-                <p className={`font-bold text-sm ${t.type === 'REVENUE' ? 'text-accent-green' : 'text-accent-red'}`}>
-                  {t.type === 'REVENUE' ? '+' : '-'} {formatCurrency(Math.abs(t.amount))}
-                </p>
+                {(() => {
+                  const amount = typeof t.amount === 'number' ? t.amount : (typeof t.value === 'number' ? t.value : 0);
+                  const isIncome = amount >= 0;
+                  return (
+                    <p className={`font-bold text-sm ${isIncome ? 'text-accent-green' : 'text-accent-red'}`}>
+                      {isIncome ? '+' : '-'} {formatCurrency(Math.abs(amount))}
+                    </p>
+                  );
+                })()}
                 <p className="text-xs text-gray-500">{formatDate(t.date)}</p>
               </div>
             </li>
